@@ -29,9 +29,17 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+    }
 }
 
 dependencies {
+
+    implementation project(path: ":core")
 
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'
@@ -63,7 +71,7 @@ dependencies {
     // Hilt
     implementation "com.google.dagger:hilt-android:$dagger_version"
     kapt "com.google.dagger:hilt-android-compiler:$dagger_version"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hiltAndroidXVersion"
+    //implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hiltAndroidXVersion" https://github.com/google/dagger/issues/3257
     kapt "androidx.hilt:hilt-compiler:$hiltAndroidXVersion"
     implementation "androidx.hilt:hilt-navigation-compose:$hiltAndroidXVersion"
 }

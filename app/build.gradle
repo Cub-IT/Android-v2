@@ -71,7 +71,16 @@ dependencies {
     // Hilt
     implementation "com.google.dagger:hilt-android:$dagger_version"
     kapt "com.google.dagger:hilt-android-compiler:$dagger_version"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hiltAndroidXVersion"
+    //implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hiltAndroidXVersion"
     kapt "androidx.hilt:hilt-compiler:$hiltAndroidXVersion"
     implementation "androidx.hilt:hilt-navigation-compose:$hiltAndroidXVersion"
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofit_gson_version")
+    implementation("com.squareup.okhttp3:okhttp:$retrofit_okhttp_version")
+    implementation("com.squareup.okhttp3:logging-interceptor:$retrofit_okhttp_version")
+
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
 }
