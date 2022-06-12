@@ -1,6 +1,13 @@
 buildscript {
     ext {
         compose_version = '1.2.0-beta03'
+        coroutines_version = "1.6.0"
+        retrofit_version = "2.9.0"
+        retrofit_gson_version = "2.9.0"
+        retrofit_okhttp_version = "5.0.0-alpha.2"
+        dataStoreVersion = "1.0.0"
+        dagger_version = "2.38.1"
+        hiltAndroidXVersion = "1.0.0-alpha03"
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {

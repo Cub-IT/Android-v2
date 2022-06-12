@@ -37,4 +37,15 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    // Compose dependencies
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0-rc01"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofit_gson_version")
+    implementation("com.squareup.okhttp3:okhttp:$retrofit_okhttp_version")
+    implementation("com.squareup.okhttp3:logging-interceptor:$retrofit_okhttp_version")
 }
