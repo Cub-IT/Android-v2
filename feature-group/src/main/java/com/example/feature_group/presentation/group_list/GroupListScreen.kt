@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,24 +18,24 @@ import com.example.feature_group.presentation.common.composable.Drawer
 import com.example.feature_group.presentation.group_list.composable.GroupList
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GroupListScreen(
     viewModel: GroupListViewModel
 ) {
     val uiState by viewModel.uiState
 
-    val scaffoldState = rememberScaffoldState()
+    //val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
 
     Scaffold(
-        scaffoldState = scaffoldState,
+        //scaffoldState = scaffoldState,
         topBar = {
-            TopAppBar(
+            SmallTopAppBar(
                 title = {
                     Text(text = "My groups")
                 },
-                navigationIcon = {
+                /*navigationIcon = {
                     IconButton(onClick = {
                         scope.launch {
                             scaffoldState.drawerState.open()
@@ -42,7 +43,7 @@ fun GroupListScreen(
                     }) {
                         Icon(imageVector = Icons.Rounded.Menu, contentDescription = null)
                     }
-                },
+                },*/
                 actions = {
                     IconButton(onClick = { /*TODO*/ }) {
                         //LetterAvatar(letter = 'A', color = Color.Blue)
@@ -51,7 +52,7 @@ fun GroupListScreen(
                 }
             )
         },
-        drawerContent = { Drawer() }
+        //drawerContent = { Drawer() }
     ) {
         when (uiState) {
             is GroupListUiState.ErrorLoadingGroups -> TODO()

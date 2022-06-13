@@ -3,9 +3,9 @@ package com.example.feature_group.presentation.group.composable
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.example.feature_group.presentation.common.composable.IconAvatar
 import com.example.feature_group.presentation.group.item.PostItem
 
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Task(
     task: PostItem,
@@ -27,7 +27,7 @@ fun Task(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(width = 1.dp, color = Color.LightGray),
-        elevation = 0.dp
+        //elevation = 0.dp
     ) {
         Column(
             modifier = Modifier
@@ -60,7 +60,6 @@ fun Task(
     }
 }
 
-@ExperimentalMaterialApi
 @Preview(showBackground = true)
 @Composable
 fun TaskPreview() {

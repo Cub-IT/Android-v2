@@ -17,6 +17,8 @@ import com.example.core.util.ViewModelCreator
 import com.example.core.util.ViewModelFactory
 import com.example.feature_auth.presentation.sign_in.SignInViewModel
 import com.example.feature_auth.presentation.sign_in.SingInScreen
+import com.example.feature_group.presentation.group_list.GroupListScreen
+import com.example.feature_group.presentation.group_list.GroupListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -30,7 +32,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Inject
-    lateinit var factory: SignInViewModel.Factory
+    lateinit var factory: GroupListViewModel.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,12 +46,10 @@ class MainActivity : ComponentActivity() {
                     //Greeting("Android")
 
                     val viewModel by viewModelCreator {
-                        factory.create(
-                            onSignInClicked = {},
-                            onSignUpClicked = {}
-                        )
+                        factory.create({})
                     }
-                    SingInScreen(viewModel = viewModel)
+                    //SingInScreen(viewModel = viewModel)
+                    GroupListScreen(viewModel = viewModel)
                 }
             }
         }
