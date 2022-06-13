@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -56,4 +58,17 @@ dependencies {
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofit_gson_version")
+    implementation("com.squareup.okhttp3:okhttp:$retrofit_okhttp_version")
+    implementation("com.squareup.okhttp3:logging-interceptor:$retrofit_okhttp_version")
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$dagger_version"
+    kapt "com.google.dagger:hilt-android-compiler:$dagger_version"
+    //implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hiltAndroidXVersion" https://github.com/google/dagger/issues/3257
+    kapt "androidx.hilt:hilt-compiler:$hiltAndroidXVersion"
+    implementation "androidx.hilt:hilt-navigation-compose:$hiltAndroidXVersion"
 }
