@@ -7,14 +7,16 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import com.example.core.presentation.theme.CubITTheme
 import com.example.core.util.ViewModelCreator
 import com.example.core.util.ViewModelFactory
+import com.example.cubit.navigation.navigator.AuthNavigator
+import com.example.cubit.navigation.navigator.GroupNavigator
 import com.example.feature_auth.presentation.sign_in.SignInViewModel
 import com.example.feature_auth.presentation.sign_in.SingInScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,14 +59,29 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
+private fun NavigationComponent(
+    navController: NavHostController,
+    authNavigator: AuthNavigator,
+    groupNavigator: GroupNavigator
+) {
+    /*LaunchedEffect(Unit) {
+        authNavigator.sharedFlow.onEach { navTarget ->
+            when (navTarget) {
+                is AuthNavigator.NavTarget.Back -> navController.navigateUp()
+                is AuthNavigator.NavTarget.SignIn -> {
+                    val t = navTarget
+                    navController.navigate(navTarget.route, navigatorExtras = Navigator.Extras.)
+                }
+                is AuthNavigator.NavTarget.SignUp -> TODO()
+            }.exhaustive
+        }
+    }*/
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    CubITTheme {
-        Greeting("Android")
+    NavHost(
+        navController = navController,
+        startDestination = "/* TODO */" //AuthNavigator.NavTarget.SignIn().route
+    ) {
+        authNavigator.navGraph
+        groupNavigator.navGraph
     }
 }
