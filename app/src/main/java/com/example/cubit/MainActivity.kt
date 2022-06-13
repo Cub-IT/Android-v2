@@ -23,6 +23,7 @@ import com.example.feature_auth.presentation.sign_in.SingInScreen
 import com.example.feature_group.presentation.common.item.GroupItem
 import com.example.feature_group.presentation.group.composable.GroupHeaderCard
 import com.example.feature_group.presentation.group.composable.Task
+import com.example.feature_group.presentation.group.composable.TaskList
 import com.example.feature_group.presentation.group.item.PostItem
 import com.example.feature_group.presentation.group_list.GroupListScreen
 import com.example.feature_group.presentation.group_list.GroupListViewModel
@@ -76,4 +77,3 @@ fun DefaultPreview() {
         Greeting("Android")
     }
 }
-

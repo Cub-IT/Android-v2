@@ -31,7 +31,7 @@ fun Task(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconAvatar(color = task.creatorColor, size = 48.dp)
+                IconAvatar(color = task.creatorColor, size = 32.dp)
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
                     Text(
