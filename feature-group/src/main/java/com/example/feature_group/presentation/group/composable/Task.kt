@@ -1,5 +1,9 @@
 package com.example.feature_group.presentation.group.composable
 
+import android.graphics.Typeface
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
+import android.widget.TextView
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedCard
@@ -11,6 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.graphics.toColorInt
+import androidx.core.text.util.LinkifyCompat
 import com.example.core.presentation.theme.Typography
 import com.example.feature_group.presentation.common.composable.IconAvatar
 import com.example.feature_group.presentation.group.item.PostItem
@@ -49,9 +56,18 @@ fun Task(
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = task.content,
-                style = Typography.bodyLarge
+            AndroidView(
+                factory = { context ->
+                    val textView = TextView(context)
+
+                    textView.text = task.content
+                    textView.textSize = 16F
+                    textView.setTextColor("#000000".toColorInt())
+                    LinkifyCompat.addLinks(textView, Linkify.ALL)
+                    textView.movementMethod = LinkMovementMethod.getInstance()
+
+                    textView
+                }
             )
         }
     }
