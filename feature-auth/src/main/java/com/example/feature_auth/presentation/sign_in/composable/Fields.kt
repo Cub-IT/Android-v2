@@ -2,8 +2,8 @@ package com.example.feature_auth.presentation.sign_in.composable
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -11,10 +11,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.feature_auth.R
-import com.example.feature_auth.presentation.sign_in.item.UserSignInItem
 import com.example.feature_auth.presentation.sign_in.SignInUiEvent
 import com.example.feature_auth.presentation.sign_in.SignInUiState
 import com.example.feature_auth.presentation.sign_in.SignInViewModel
+import com.example.feature_auth.presentation.sign_in.item.UserSignInItem
 
 @Composable
 fun Fields(
