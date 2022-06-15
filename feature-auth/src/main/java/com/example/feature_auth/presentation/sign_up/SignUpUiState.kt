@@ -13,6 +13,6 @@ sealed class SignUpUiState(
 
     class WaitingResponse(user: UserRegistrationItem) : SignUpUiState(user = user, false)
 
-    class FailedSignUp(user: UserRegistrationItem, val cause: String, isSignUpEnabled: Boolean)
+    class FailedSignUp(user: UserRegistrationItem, val cause: String?, isSignUpEnabled: Boolean)
         : SignUpUiState(user = user, isSignUpEnabled = isSignUpEnabled)
 }

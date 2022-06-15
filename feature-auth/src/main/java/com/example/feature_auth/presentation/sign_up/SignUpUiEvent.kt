@@ -1,10 +1,12 @@
 package com.example.feature_auth.presentation.sign_up
 
 import com.example.core.presentation.UiEvent
-import com.example.feature_auth.presentation.sign_up.item.UserRegistrationItem
 
 sealed class SignUpUiEvent : UiEvent() {
-    class UpdateUserRegistrationData(val user: UserRegistrationItem) : SignUpUiEvent()
+    class UpdateUserFirstName(val firstName: String) : SignUpUiEvent()
+    class UpdateUserLastName(val lastName: String) : SignUpUiEvent()
+    class UpdateUserEmail(val email: String) : SignUpUiEvent()
+    class UpdateUserPassword(val password: String) : SignUpUiEvent()
     object NavigateToSignIn : SignUpUiEvent()
     object SignUp : SignUpUiEvent()
 }
