@@ -21,3 +21,13 @@ inline fun <T, E : Exception> Result<T, E>.onFailure(block: (Result.Failure<E>) 
         is Result.Failure<E> -> block(this)
     }
 }
+
+inline fun <T, E : Exception> Result<T, E>.result(
+    onSuccess: (Result.Success<T>) -> Unit,
+    onFailure: (Result.Failure<E>) -> Unit
+) {
+    when(this) {
+        is Result.Success -> onSuccess(this)
+        is Result.Failure<E> -> onFailure(this)
+    }
+}
