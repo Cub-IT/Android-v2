@@ -20,6 +20,8 @@ import com.example.core.util.ViewModelCreator
 import com.example.core.util.ViewModelFactory
 import com.example.feature_auth.presentation.sign_in.SignInViewModel
 import com.example.feature_auth.presentation.sign_in.SingInScreen
+import com.example.feature_auth.presentation.sign_up.SignUpViewModel
+import com.example.feature_auth.presentation.sign_up.SingUpScreen
 import com.example.feature_group.presentation.common.item.GroupItem
 import com.example.feature_group.presentation.group.composable.GroupHeaderCard
 import com.example.feature_group.presentation.group.composable.Task
@@ -41,7 +43,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Inject
-    lateinit var factory: GroupListViewModel.Factory
+    lateinit var factory: SignUpViewModel.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,10 +57,10 @@ class MainActivity : ComponentActivity() {
                     //Greeting("Android")
 
                     val viewModel by viewModelCreator {
-                        factory.create({})
+                        factory.create({}, {})
                     }
-                    //SingInScreen(viewModel = viewModel)
-                    GroupListScreen(viewModel = viewModel)
+                    SingUpScreen(viewModel = viewModel)
+                    //GroupListScreen(viewModel = viewModel)
                 }
             }
         }

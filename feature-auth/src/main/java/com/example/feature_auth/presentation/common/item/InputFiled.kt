@@ -1,4 +1,4 @@
-package com.example.feature_auth.presentation.sign_in.item
+package com.example.feature_auth.presentation.common.item
 
 import androidx.annotation.StringRes
 

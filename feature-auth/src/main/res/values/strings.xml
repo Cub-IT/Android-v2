@@ -3,7 +3,8 @@
     <string name="sign_in">Sign in</string>
     <string name="sign_up">Sign up</string>
     <string name="cancel">Cancel</string>
-    <string name="user_name">User name</string>
+    <string name="user_first_name">User first name</string>
+    <string name="user_last_name">User last name</string>
     <string name="user_email">User email</string>
     <string name="user_password">User password</string>
     <string name="short_name">Name is too short</string>
@@ -11,5 +12,10 @@
     <string name="long_name">Name is too long</string>
     <string name="invalid_email_format">Invalid email format</string>
     <string name="error_occurred">An error has occurred</string>
-    <string name="default_error_message">Sorry, an error occurred.\nPlease try again</string>
+    <string name="default_error_header_message">Sorry, an error occurred.\nPlease try again</string>
+    <string name="long_email">Email is too long</string>
+    <string name="long_password">Password is too long</string>
+    <string name="password_error_uppercase">Password should have at least one uppercase letter</string>
+    <string name="password_error_lowercase">Password should have at least one lowercase letter</string>
+    <string name="password_error_number">Password should have at least one number letter</string>
 </resources>

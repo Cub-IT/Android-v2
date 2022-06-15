@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.core.presentation.theme.Typography
-import com.example.feature_auth.presentation.sign_in.item.InputFiled
+import com.example.feature_auth.presentation.common.item.InputFiled
 
 @Composable
 fun UndefinedOutlinedTextField(

@@ -18,14 +18,33 @@ object InputLinterModule {
     @Singleton
     @Named("emailLinter")
     fun provideEmailLinter() = InputLinter()
-        .addRule(errorMessage = R.string.invalid_email_format) { input ->
-            Patterns.EMAIL_ADDRESS.matcher(input).matches()
-        }
+        .addRule(errorMessage = R.string.invalid_email_format) { input -> Patterns.EMAIL_ADDRESS.matcher(input).matches() }
+        .addRule(errorMessage = R.string.long_email) { input -> input.length < 45 }
 
     @Provides
     @Singleton
     @Named("passwordLinter")
     fun providePasswordLinter() = InputLinter()
-        .addRule(errorMessage = R.string.short_password) { input -> input.length > 6}
+        .addRule(errorMessage = R.string.short_password) { input -> input.length > 5 }
+        .addRule(errorMessage = R.string.long_password) { input -> input.length < 45 }
+        .addRule(errorMessage = R.string.password_error_uppercase) { input -> input.hasUpperCase() }
+        .addRule(errorMessage = R.string.password_error_number) { input -> input.hasDigit() }
+        .addRule(errorMessage = R.string.password_error_lowercase) { input -> input.hasLowerCase() }
+
+    @Provides
+    @Singleton
+    @Named("nameLinter")
+    fun provideNameLinter() = InputLinter()
+        .addRule(errorMessage = R.string.short_name) { input -> input.isNotEmpty() }
+        .addRule(errorMessage = R.string.long_name) { input -> input.length < 45 }
+
+    private fun String.hasDigit() = this.any { it.isDigit() }
+
+    private fun String.hasUpperCase() = this.any { it.isUpperCase() }
+
+    private fun String.hasLowerCase() = this.any { it.isLowerCase() }
+
+    private fun String.isFitted() = this.all { it.isLetterOrDigit() or "".contains(it) }
+
 
 }

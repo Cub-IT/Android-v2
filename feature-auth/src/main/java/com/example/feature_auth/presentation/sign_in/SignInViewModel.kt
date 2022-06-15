@@ -1,16 +1,12 @@
 package com.example.feature_auth.presentation.sign_in
 
-import android.util.Patterns
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
 import com.example.core.data.repository.AuthRepository
 import com.example.core.presentation.BaseViewModel
 import com.example.core.util.InputLinter
 import com.example.core.util.exhaustive
 import com.example.core.util.result
-import com.example.feature_auth.R
-import com.example.feature_auth.presentation.sign_in.item.InputFiled
+import com.example.feature_auth.presentation.common.item.InputFiled
 import com.example.feature_auth.presentation.sign_in.item.UserSignInItem
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -23,7 +19,7 @@ class SignInViewModel @AssistedInject constructor(
     @Assisted("signUp") private val onSignUpClicked: () -> Unit,
     private val authRepository: AuthRepository,
     @Named("emailLinter") private val emailLinter: InputLinter,
-    @Named("passwordLinter") private val passwordLinter: InputLinter,
+    @Named("passwordLinter") private val passwordLinter: InputLinter
 ) : BaseViewModel<SignInUiEvent, SignInUiState>() {
 
     @AssistedFactory
@@ -108,8 +104,9 @@ class SignInViewModel @AssistedInject constructor(
 
     private fun isSignInEnabled(user: UserSignInItem): Boolean {
         return (user.email.error == null) and
-                (user.password.error == null) and
                 (user.email.value.isNotEmpty()) and
+
+                (user.password.error == null) and
                 (user.password.value.isNotEmpty())
     }
 

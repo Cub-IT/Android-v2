@@ -38,7 +38,7 @@ fun SingInScreen(
                         )
                         Text(
                             text = (uiState as SignInUiState.FailedSignIn).cause
-                                ?: stringResource(R.string.default_error_message),
+                                ?: stringResource(R.string.default_error_header_message),
                             style = Typography.bodyLarge,
                             textAlign = TextAlign.Center
                         )
