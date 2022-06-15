@@ -18,4 +18,5 @@
     <string name="password_error_uppercase">Password should have at least one uppercase letter</string>
     <string name="password_error_lowercase">Password should have at least one lowercase letter</string>
     <string name="password_error_number">Password should have at least one number letter</string>
+    <string name="password_error_prohibited">Password should not contain: \" \' . ,</string>
 </resources>

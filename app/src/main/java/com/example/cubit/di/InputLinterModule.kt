@@ -30,6 +30,7 @@ object InputLinterModule {
         .addRule(errorMessage = R.string.password_error_uppercase) { input -> input.hasUpperCase() }
         .addRule(errorMessage = R.string.password_error_number) { input -> input.hasDigit() }
         .addRule(errorMessage = R.string.password_error_lowercase) { input -> input.hasLowerCase() }
+        .addRule(errorMessage = R.string.password_error_prohibited) { input -> input.doesNotContain("\"\'.,") }
 
     @Provides
     @Singleton
@@ -46,5 +47,6 @@ object InputLinterModule {
 
     private fun String.isFitted() = this.all { it.isLetterOrDigit() or "".contains(it) }
 
+    private fun String.doesNotContain(prohibited: String) = this.none { prohibited.contains(it) }
 
 }
