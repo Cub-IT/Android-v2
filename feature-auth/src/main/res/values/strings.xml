@@ -6,4 +6,8 @@
     <string name="user_name">User name</string>
     <string name="user_email">User email</string>
     <string name="user_password">User password</string>
+    <string name="short_name">Name is too short</string>
+    <string name="short_password">Password is too short</string>
+    <string name="long_name">Name is too long</string>
+    <string name="invalid_email_format">Invalid email format</string>
 </resources>
