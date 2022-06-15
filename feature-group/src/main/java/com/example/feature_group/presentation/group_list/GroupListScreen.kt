@@ -3,23 +3,19 @@ package com.example.feature_group.presentation.group_list
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.feature_group.presentation.common.composable.Drawer
 import com.example.feature_group.presentation.common.composable.IconAvatar
 import com.example.feature_group.presentation.group_list.composable.GroupList
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,12 +32,18 @@ fun GroupListScreen(
                 },
                 actions = {
                     IconButton(onClick = { /*TODO*/ }) {
-                        //LetterAvatar(letter = 'A', color = Color.Blue)
-                        //Icon(imageVector = Icons.Rounded.Person, contentDescription = null)
-                        IconAvatar(color = Color.Blue, size = 32.dp)
+                        IconAvatar(color = Color(0xFF3B79E8), size = 40.dp)
+                    }
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(imageVector = Icons.Default.Refresh, contentDescription = null)
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /*TODO*/ }) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            }
         }
     ) {
         when (uiState) {
