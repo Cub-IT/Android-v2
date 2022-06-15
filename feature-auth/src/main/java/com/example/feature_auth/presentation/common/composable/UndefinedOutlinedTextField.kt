@@ -1,4 +1,4 @@
-package com.example.feature_auth.presentation.sign_in.composable
+package com.example.feature_auth.presentation.common.composable
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
