@@ -56,7 +56,7 @@ fun GroupListScreen(
         when (uiState) {
             is GroupListUiState.ErrorLoadingGroups -> {
                 ErrorMessage(
-                    errorDetails = (uiState as GroupListUiState.ErrorLoadingGroups).cause,
+                    errorCause = (uiState as GroupListUiState.ErrorLoadingGroups).cause,
                     modifier = Modifier.padding(it).padding(16.dp)
                 )
             }

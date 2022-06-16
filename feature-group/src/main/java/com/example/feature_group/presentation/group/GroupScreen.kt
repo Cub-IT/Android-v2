@@ -50,7 +50,7 @@ fun GroupScreen(
             }
 
             if (uiState is GroupUiState.ErrorLoadingTasks) {
-                ErrorMessage(errorDetails = (uiState as GroupUiState.ErrorLoadingTasks).cause)
+                ErrorMessage(errorCause = (uiState as GroupUiState.ErrorLoadingTasks).cause)
             }
 
             TaskList(

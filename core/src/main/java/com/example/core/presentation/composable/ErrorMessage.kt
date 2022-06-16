@@ -13,7 +13,7 @@ import com.example.core.presentation.theme.Typography
 
 @Composable
 fun ErrorMessage(
-    errorDetails: String?,
+    errorCause: String?,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -25,7 +25,7 @@ fun ErrorMessage(
             style = Typography.headlineMedium
         )
         Text(
-            text = errorDetails ?: stringResource(R.string.default_error_header_message),
+            text = errorCause ?: stringResource(R.string.default_error_cause_message),
             style = Typography.bodyLarge,
             textAlign = TextAlign.Center
         )

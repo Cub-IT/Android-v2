@@ -28,7 +28,7 @@ fun SingUpScreen(
             Box(Modifier.fillMaxSize()) {
                 if (uiState is SignUpUiState.FailedSignUp) {
                     ErrorMessage(
-                        errorDetails = (uiState as SignUpUiState.FailedSignUp).cause,
+                        errorCause = (uiState as SignUpUiState.FailedSignUp).cause,
                         modifier = Modifier.padding(16.dp)
                     )
                 }
