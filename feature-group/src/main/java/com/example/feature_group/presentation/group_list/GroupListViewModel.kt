@@ -1,10 +1,8 @@
 package com.example.feature_group.presentation.group_list
 
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
 import com.example.core.presentation.BaseViewModel
 import com.example.core.util.exhaustive
-import com.example.feature_group.presentation.common.item.GroupItem
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

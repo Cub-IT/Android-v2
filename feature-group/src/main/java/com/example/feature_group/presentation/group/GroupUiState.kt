@@ -1,14 +1,18 @@
 package com.example.feature_group.presentation.group
 
 import com.example.core.presentation.UiState
+import com.example.feature_group.presentation.common.item.GroupItem
 import com.example.feature_group.presentation.group.item.PostItem
 
-sealed class GroupUiState : UiState() {
+sealed class GroupUiState(val group: GroupItem, val posts: List<PostItem>) : UiState() {
 
-    object Loading : GroupUiState()
+    class Loading(group: GroupItem, posts: List<PostItem>)
+        : GroupUiState(group = group, posts = posts)
 
-    data class TasksFetched(val posts: List<PostItem>) : GroupUiState()
+    class TasksFetched(group: GroupItem, posts: List<PostItem>)
+        : GroupUiState(group = group, posts = posts)
 
-    class ErrorLoadingTasks(val posts: List<PostItem>, reason: String) : GroupUiState()
+    class ErrorLoadingTasks(group: GroupItem, posts: List<PostItem>, val cause: String?)
+        : GroupUiState(group = group, posts = posts)
 
 }
