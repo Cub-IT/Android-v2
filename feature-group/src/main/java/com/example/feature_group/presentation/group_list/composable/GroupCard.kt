@@ -20,10 +20,10 @@ import com.example.feature_group.presentation.common.item.GroupItem
 fun GroupCard(
     modifier: Modifier = Modifier,
     group: GroupItem,
-    onClick: () -> Unit
+    onClick: (groupId: String) -> Unit
 ) {
     Card(
-        onClick = onClick,
+        onClick = { onClick(group.name) },
         modifier = modifier
             .fillMaxWidth()
             .height(144.dp),

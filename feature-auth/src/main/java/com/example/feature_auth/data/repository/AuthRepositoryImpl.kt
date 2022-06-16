@@ -25,14 +25,16 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun signIn(email: String, password: String): Result<Unit, Exception> {
-        val userToken = authService.signIn(email = email, password = password)
+        /*val userToken = authService.signIn(email = email, password = password)
             .onFailure { return it }
         authDataStore.saveUserId(userToken)
-        return Result.Success(Unit)
+        return Result.Success(Unit)*/
+        return Result.Failure(error = IllegalArgumentException())
     }
 
     override suspend fun signUp(name: String, email: String, password: String): Result<Unit, Exception> {
-        return authService.signUp(name = name, email = email, password = password)
+        //return authService.signUp(name = name, email = email, password = password)
+        return Result.Failure(error = IllegalArgumentException())
     }
 
     override suspend fun logOut() {

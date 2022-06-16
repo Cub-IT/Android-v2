@@ -11,8 +11,6 @@
     <string name="short_password">Password is too short</string>
     <string name="long_name">Name is too long</string>
     <string name="invalid_email_format">Invalid email format</string>
-    <string name="error_occurred">An error has occurred</string>
-    <string name="default_error_header_message">Sorry, an error occurred.\nPlease try again</string>
     <string name="long_email">Email is too long</string>
     <string name="long_password">Password is too long</string>
     <string name="password_error_uppercase">Password should have at least one uppercase letter</string>

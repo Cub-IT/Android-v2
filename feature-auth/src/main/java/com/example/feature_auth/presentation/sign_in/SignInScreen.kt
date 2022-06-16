@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.core.presentation.composable.ErrorMessage
 import com.example.core.presentation.theme.Typography
 import com.example.feature_auth.R
 import com.example.feature_auth.presentation.common.composable.BottomButtons
@@ -26,23 +27,10 @@ fun SingInScreen(
         is SignInUiState.WaitingUserData -> {
             Box(Modifier.fillMaxSize()) {
                 if (uiState is SignInUiState.FailedSignIn) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = stringResource(R.string.error_occurred),
-                            style = Typography.headlineMedium
-                        )
-                        Text(
-                            text = (uiState as SignInUiState.FailedSignIn).cause
-                                ?: stringResource(R.string.default_error_header_message),
-                            style = Typography.bodyLarge,
-                            textAlign = TextAlign.Center
-                        )
-                    }
+                    ErrorMessage(
+                        errorDetails = (uiState as SignInUiState.FailedSignIn).cause,
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
 
                 Fields(
