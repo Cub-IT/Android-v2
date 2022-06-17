@@ -1,11 +1,11 @@
 package com.example.feature_auth.presentation.sign_up
 
 import androidx.lifecycle.viewModelScope
-import com.example.core.data.repository.AuthRepository
 import com.example.core.presentation.BaseViewModel
 import com.example.core.util.InputLinter
 import com.example.core.util.exhaustive
 import com.example.core.util.result
+import com.example.feature_auth.data.repository.AuthRepository
 import com.example.feature_auth.presentation.common.item.InputFiled
 import com.example.feature_auth.presentation.sign_up.item.UserRegistrationItem
 import dagger.assisted.Assisted

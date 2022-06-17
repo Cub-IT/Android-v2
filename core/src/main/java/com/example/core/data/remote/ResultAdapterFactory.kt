@@ -1,5 +1,6 @@
 package com.example.core.data.remote
 
+import com.example.core.util.Result
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
