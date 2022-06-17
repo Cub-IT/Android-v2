@@ -5,10 +5,10 @@ import com.example.feature_group.presentation.common.item.GroupItem
 
 sealed class GroupListUiState : UiState() {
 
-    object LoadingGroups : GroupListUiState()
+    data class LoadingGroups(val groups: List<GroupItem>) : GroupListUiState()
 
-    class GroupsFetched(val groups: List<GroupItem>) : GroupListUiState()
+    data class GroupsFetched(val groups: List<GroupItem>) : GroupListUiState()
 
-    class ErrorLoadingGroups(val groups: List<GroupItem>, reason: String) : GroupListUiState()
+    data class ErrorLoadingGroups(val cause: String?) : GroupListUiState()
 
 }

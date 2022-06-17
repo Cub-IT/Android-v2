@@ -6,4 +6,8 @@ sealed class GroupUiEvent : UiEvent() {
 
     object LoadGroup : GroupUiEvent()
 
+    object UserAvatarClicked : GroupUiEvent()
+
+    object BackClicked : GroupUiEvent()
+
 }
