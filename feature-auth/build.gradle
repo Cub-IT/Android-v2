@@ -67,6 +67,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:$retrofit_okhttp_version")
 
     // DataStore
+    implementation "androidx.datastore:datastore:1.0.0"
     implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
 
     // Hilt
