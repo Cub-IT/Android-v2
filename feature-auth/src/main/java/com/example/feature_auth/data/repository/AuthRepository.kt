@@ -1,14 +1,14 @@
 package com.example.feature_auth.data.repository
 
+import com.example.core.data.local.UserSource
 import com.example.core.util.Result
 import com.example.core.util.onFailure
-import com.example.feature_auth.data.local.AuthDataStore
 import com.example.feature_auth.data.remote.api.AuthService
 import com.example.feature_auth.data.remote.entry.toUserItem
 import javax.inject.Inject
 
 class AuthRepository @Inject constructor(
-    private val authDataStore: AuthDataStore,
+    private val userSource: UserSource,
     private val authService: AuthService
 ) {
 
@@ -17,7 +17,7 @@ class AuthRepository @Inject constructor(
             .onFailure { return it }
             .toUserItem()
 
-        authDataStore.saveUser(userItem)
+        userSource.saveUser(userItem)
         return Result.Success(Unit)
     }
 
@@ -26,7 +26,7 @@ class AuthRepository @Inject constructor(
             .onFailure { return it }
             .toUserItem()
 
-        authDataStore.saveUser(userItem)
+        userSource.saveUser(userItem)
         return Result.Success(Unit)
     }
 

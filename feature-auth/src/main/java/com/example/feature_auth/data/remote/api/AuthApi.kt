@@ -15,7 +15,7 @@ interface AuthApi {
         @Body signInRequestEntry: SignInRequestEntry
     ): Result<SignResponseEntry, Exception>
 
-    @GET("/api/v1/user/new")
+    @POST("/new")
     suspend fun signUp(
         @Body signUpRequestEntry: SignUpRequestEntry
     ): Result<SignResponseEntry, Exception>

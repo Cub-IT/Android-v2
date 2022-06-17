@@ -8,19 +8,20 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AuthDataStore @Inject constructor(
+class UserDataStore @Inject constructor(
     @ApplicationContext private val appContext: Context
 ) : UserSource {
 
-    override suspend fun getUser(): UserItem? {
+    override fun getUser(): UserItem? {
+        return null
         TODO("Not yet implemented")
     }
 
-    override suspend fun saveUser(userItem: UserItem) {
+    override fun saveUser(userItem: UserItem) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteUser() {
+    override fun deleteUser() {
         TODO("Not yet implemented")
     }
 

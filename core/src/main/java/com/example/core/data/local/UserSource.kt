@@ -4,12 +4,12 @@ import com.example.core.presentation.item.UserItem
 
 interface UserSource {
 
-    suspend fun isSignedIn(): Boolean = getUser() != null
+    fun isAuthorized(): Boolean = getUser() != null
 
-    suspend fun getUser(): UserItem?
+    fun getUser(): UserItem?
 
-    suspend fun saveUser(userItem: UserItem)
+    fun saveUser(userItem: UserItem)
 
-    suspend fun deleteUser()
+    fun deleteUser()
 
 }
