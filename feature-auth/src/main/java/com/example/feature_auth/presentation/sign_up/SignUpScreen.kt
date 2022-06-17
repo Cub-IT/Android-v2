@@ -2,15 +2,16 @@ package com.example.feature_auth.presentation.sign_up
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.core.presentation.composable.ErrorMessage
 import com.example.feature_auth.R
 import com.example.feature_auth.presentation.common.composable.BottomButtons
 import com.example.feature_auth.presentation.sign_up.composable.Fields
@@ -26,12 +27,10 @@ fun SingUpScreen(
         is SignUpUiState.WaitingUserData -> {
             Box(Modifier.fillMaxSize()) {
                 if (uiState is SignUpUiState.FailedSignUp) {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-                        Text(text = (uiState as SignUpUiState.FailedSignUp).cause)
-                    }
+                    ErrorMessage(
+                        errorCause = (uiState as SignUpUiState.FailedSignUp).cause,
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
 
                 Fields(

@@ -1,7 +1,10 @@
 package com.example.feature_auth.presentation.common.composable
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +38,7 @@ fun BoxScope.BottomButtons(
                     Text(
                         text = negativeButtonText.uppercase(),
                         fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.subtitle2
+                        // TODO: style = MaterialTheme.typography.subtitle2
                     )
                 }
                 Spacer(modifier = Modifier.padding(16.dp))
@@ -48,7 +51,7 @@ fun BoxScope.BottomButtons(
                 Text(
                     text = positiveButtonText.uppercase(),
                     fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.subtitle2
+                    // TODO: style = MaterialTheme.typography.subtitle2
                 )
             }
         }

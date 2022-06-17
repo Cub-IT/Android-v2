@@ -3,62 +3,70 @@ package com.example.feature_group.presentation.group_list
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.example.feature_group.presentation.common.composable.Drawer
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.example.core.presentation.composable.ErrorMessage
+import com.example.feature_group.presentation.common.composable.IconAvatar
 import com.example.feature_group.presentation.group_list.composable.GroupList
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GroupListScreen(
     viewModel: GroupListViewModel
 ) {
     val uiState by viewModel.uiState
 
-    val scaffoldState = rememberScaffoldState()
-    val scope = rememberCoroutineScope()
-
     Scaffold(
-        scaffoldState = scaffoldState,
         topBar = {
-            TopAppBar(
+            SmallTopAppBar(
                 title = {
                     Text(text = "My groups")
                 },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        scope.launch {
-                            scaffoldState.drawerState.open()
-                        }
-                    }) {
-                        Icon(imageVector = Icons.Rounded.Menu, contentDescription = null)
-                    }
-                },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        //LetterAvatar(letter = 'A', color = Color.Blue)
-                        Icon(imageVector = Icons.Rounded.Person, contentDescription = null)
+                    IconButton(onClick = {
+                        viewModel.handleEvent(event = GroupListUiEvent.UserAvatarClicked)
+                    }) {
+                        IconAvatar(color = Color(0xFF3B79E8), size = 40.dp)
+                    }
+                    IconButton(onClick = {
+                        viewModel.handleEvent(event = GroupListUiEvent.LoadGroups)
+                    }) {
+                        Icon(imageVector = Icons.Default.Refresh, contentDescription = null)
                     }
                 }
             )
         },
-        drawerContent = { Drawer() }
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                viewModel.handleEvent(event = GroupListUiEvent.AddButtonClicked)
+            }) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            }
+        }
     ) {
         when (uiState) {
-            is GroupListUiState.ErrorLoadingGroups -> TODO()
+            is GroupListUiState.ErrorLoadingGroups -> {
+                ErrorMessage(
+                    errorCause = (uiState as GroupListUiState.ErrorLoadingGroups).cause,
+                    modifier = Modifier.padding(it).padding(16.dp)
+                )
+            }
             is GroupListUiState.GroupsFetched -> {
                 GroupList(
                     groups = (uiState as GroupListUiState.GroupsFetched).groups,
-                    modifier = Modifier.padding(it)
+                    modifier = Modifier.padding(it),
+                    onGroupClick = { groupId ->
+                        viewModel.handleEvent(event = GroupListUiEvent.OpenGroup(groupId))
+                    }
                 )
             }
             is GroupListUiState.LoadingGroups -> {

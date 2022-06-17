@@ -1,20 +1,26 @@
 package com.example.feature_auth.presentation.sign_up
 
-import android.util.Patterns
 import androidx.lifecycle.viewModelScope
-import com.example.core.data.repository.AuthRepository
 import com.example.core.presentation.BaseViewModel
+import com.example.core.util.InputLinter
 import com.example.core.util.exhaustive
+import com.example.core.util.result
+import com.example.feature_auth.data.repository.AuthRepository
+import com.example.feature_auth.presentation.common.item.InputFiled
 import com.example.feature_auth.presentation.sign_up.item.UserRegistrationItem
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
+import javax.inject.Named
 
 class SignUpViewModel @AssistedInject constructor(
     @Assisted("signIn") private val onSignInClicked: () -> Unit,
     @Assisted("signUp") private val onSignUpClicked: () -> Unit,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    @Named("emailLinter") private val emailLinter: InputLinter,
+    @Named("passwordLinter") private val passwordLinter: InputLinter,
+    @Named("nameLinter") private val nameLinter: InputLinter
 ) : BaseViewModel<SignUpUiEvent, SignUpUiState>() {
 
     @AssistedFactory
@@ -27,9 +33,10 @@ class SignUpViewModel @AssistedInject constructor(
 
     override fun createInitialState(): SignUpUiState {
         val user = UserRegistrationItem(
-            name = "",
-            email = "",
-            password = "",
+            firstName = InputFiled(""),
+            lastName = InputFiled(""),
+            email = InputFiled(""),
+            password = InputFiled(""),
         )
         return SignUpUiState.WaitingUserData(
             user = user,
@@ -39,17 +46,9 @@ class SignUpViewModel @AssistedInject constructor(
 
     override fun handleEvent(event: SignUpUiEvent) {
         when (val currentState = uiState.value) {
-            is SignUpUiState.WaitingResponse -> reduce(event, currentState)
+            is SignUpUiState.WaitingResponse -> throw IllegalStateException()
             is SignUpUiState.WaitingUserData -> reduce(event, currentState)
             is SignUpUiState.FailedSignUp -> reduce(event, currentState)
-        }.exhaustive
-    }
-
-    private fun reduce(event: SignUpUiEvent, currentState: SignUpUiState.WaitingResponse) {
-        when (event) {
-            is SignUpUiEvent.UpdateUserRegistrationData,
-            is SignUpUiEvent.NavigateToSignIn,
-            is SignUpUiEvent.SignUp -> throw IllegalStateException()
         }.exhaustive
     }
 
@@ -57,10 +56,52 @@ class SignUpViewModel @AssistedInject constructor(
         when (event) {
             is SignUpUiEvent.SignUp -> signUp(user = currentState.user)
             is SignUpUiEvent.NavigateToSignIn -> onSignInClicked()
-            is SignUpUiEvent.UpdateUserRegistrationData -> {
+            is SignUpUiEvent.UpdateUserFirstName -> {
+                val userInput = UserRegistrationItem(
+                    firstName = getNewName(event.firstName),
+                    lastName = currentState.user.lastName,
+                    email = currentState.user.email,
+                    password = currentState.user.password
+                )
                 _uiState.value = SignUpUiState.WaitingUserData(
-                    user = event.user,
-                    isSignUpEnabled = isSignUpEnabled(event.user)
+                    user = userInput,
+                    isSignUpEnabled = isSignUpEnabled(userInput)
+                )
+            }
+            is SignUpUiEvent.UpdateUserLastName -> {
+                val userInput = UserRegistrationItem(
+                    firstName = currentState.user.firstName,
+                    lastName = getNewName(event.lastName),
+                    email = currentState.user.email,
+                    password = currentState.user.password
+                )
+                _uiState.value = SignUpUiState.WaitingUserData(
+                    user = userInput,
+                    isSignUpEnabled = isSignUpEnabled(userInput)
+                )
+            }
+            is SignUpUiEvent.UpdateUserEmail -> {
+                val userInput = UserRegistrationItem(
+                    firstName = currentState.user.firstName,
+                    lastName = currentState.user.lastName,
+                    email = getNewEmail(event.email),
+                    password = currentState.user.password
+                )
+                _uiState.value = SignUpUiState.WaitingUserData(
+                    user = userInput,
+                    isSignUpEnabled = isSignUpEnabled(userInput)
+                )
+            }
+            is SignUpUiEvent.UpdateUserPassword -> {
+                val userInput = UserRegistrationItem(
+                    firstName = currentState.user.firstName,
+                    lastName = currentState.user.lastName,
+                    email = currentState.user.email,
+                    password = getNewPassword(event.password)
+                )
+                _uiState.value = SignUpUiState.WaitingUserData(
+                    user = userInput,
+                    isSignUpEnabled = isSignUpEnabled(userInput)
                 )
             }
         }.exhaustive
@@ -70,31 +111,114 @@ class SignUpViewModel @AssistedInject constructor(
         when (event) {
             is SignUpUiEvent.SignUp -> signUp(user = currentState.user)
             is SignUpUiEvent.NavigateToSignIn -> onSignInClicked()
-            is SignUpUiEvent.UpdateUserRegistrationData -> {
+            is SignUpUiEvent.UpdateUserFirstName -> {
+                val userInput = UserRegistrationItem(
+                    firstName = getNewName(event.firstName),
+                    lastName = currentState.user.lastName,
+                    email = currentState.user.email,
+                    password = currentState.user.password
+                )
                 _uiState.value = SignUpUiState.FailedSignUp(
-                    user = event.user,
+                    user = userInput,
                     cause = currentState.cause,
-                    isSignUpEnabled = isSignUpEnabled(event.user)
+                    isSignUpEnabled = isSignUpEnabled(userInput)
+                )
+            }
+            is SignUpUiEvent.UpdateUserLastName -> {
+                val userInput = UserRegistrationItem(
+                    firstName = currentState.user.firstName,
+                    lastName = getNewName(event.lastName),
+                    email = currentState.user.email,
+                    password = currentState.user.password
+                )
+                _uiState.value = SignUpUiState.FailedSignUp(
+                    user = userInput,
+                    cause = currentState.cause,
+                    isSignUpEnabled = isSignUpEnabled(userInput)
+                )
+            }
+            is SignUpUiEvent.UpdateUserEmail -> {
+                val userInput = UserRegistrationItem(
+                    firstName = currentState.user.firstName,
+                    lastName = currentState.user.lastName,
+                    email = getNewEmail(event.email),
+                    password = currentState.user.password
+                )
+                _uiState.value = SignUpUiState.FailedSignUp(
+                    user = userInput,
+                    cause = currentState.cause,
+                    isSignUpEnabled = isSignUpEnabled(userInput)
+                )
+            }
+            is SignUpUiEvent.UpdateUserPassword -> {
+                val userInput = UserRegistrationItem(
+                    firstName = currentState.user.firstName,
+                    lastName = currentState.user.lastName,
+                    email = currentState.user.email,
+                    password = getNewPassword(event.password)
+                )
+                _uiState.value = SignUpUiState.FailedSignUp(
+                    user = userInput,
+                    cause = currentState.cause,
+                    isSignUpEnabled = isSignUpEnabled(userInput)
                 )
             }
         }.exhaustive
     }
 
     private fun isSignUpEnabled(user: UserRegistrationItem): Boolean {
-        return Patterns.EMAIL_ADDRESS.matcher(user.email).matches()
-                && user.password.isNotBlank()
-                && user.name.isNotBlank()
+        return (user.firstName.error == null) and
+                (user.firstName.value.isNotEmpty()) and
+
+                (user.lastName.error == null) and
+                (user.lastName.value.isNotEmpty()) and
+
+                (user.email.error == null) and
+                (user.email.value.isNotEmpty()) and
+
+                (user.password.error == null) and
+                (user.password.value.isNotEmpty())
     }
 
     private fun signUp(user: UserRegistrationItem) {
         viewModelScope.launch {
             authRepository.signUp(
-                name = user.name,
-                email = user.email,
-                password = user.password
+                name = user.firstName.value,
+                email = user.email.value,
+                password = user.password.value
+            ).result(
+                onSuccess = { onSignUpClicked() },
+                onFailure = {
+                    _uiState.value = SignUpUiState.FailedSignUp(
+                        user = user,
+                        cause = it.error.localizedMessage,
+                        isSignUpEnabled(user)
+                    )
+                }
             )
-            onSignUpClicked()
+
         }
+    }
+
+    private fun getNewName(name: String): InputFiled {
+        return InputFiled(
+            value = name,
+            error = nameLinter.check(name.trim())
+        )
+    }
+
+    private fun getNewEmail(email: String): InputFiled {
+        return InputFiled(
+            value = email,
+            error = emailLinter.check(email.trim())
+        )
+    }
+
+    private fun getNewPassword(password: String): InputFiled {
+        return InputFiled(
+            value = password,
+            error = passwordLinter.check(password.trim())
+        )
     }
 
 }

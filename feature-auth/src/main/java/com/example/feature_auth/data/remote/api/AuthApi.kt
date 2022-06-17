@@ -2,7 +2,7 @@ package com.example.feature_auth.data.remote.api
 
 import com.example.core.util.Result
 import com.example.feature_auth.data.remote.entry.SignInRequestEntry
-import com.example.feature_auth.data.remote.entry.SignInResponseEntry
+import com.example.feature_auth.data.remote.entry.SignResponseEntry
 import com.example.feature_auth.data.remote.entry.SignUpRequestEntry
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -13,11 +13,11 @@ interface AuthApi {
     @POST("/login")
     suspend fun signIn(
         @Body signInRequestEntry: SignInRequestEntry
-    ): Result<SignInResponseEntry, Exception>
+    ): Result<SignResponseEntry, Exception>
 
-    @GET("/api/v1/user/new")
+    @POST("/new")
     suspend fun signUp(
         @Body signUpRequestEntry: SignUpRequestEntry
-    ): Result<Unit, Exception>
+    ): Result<SignResponseEntry, Exception>
 
 }

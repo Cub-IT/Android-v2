@@ -1,6 +1,8 @@
 package com.example.cubit.di
 
-import com.example.core.util.BASE_URL
+import com.example.core.data.local.UserSource
+import com.example.core.data.remote.ResultAdapterFactory
+import com.example.core.util.API_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,11 +20,22 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideBaseRetrofit(): Retrofit = createRetrofit(BASE_URL).build()
+    fun provideRetrofit(userSource: UserSource): Retrofit {
+        val baseUrl = "$API_URL/api/v1/user/"
+            .apply {
+                if (userSource.isAuthorized()) {
+                    val userId = userSource.getUser()?.id
+                        ?: throw IllegalStateException("User is authorized but user's id is ${userSource.getUser()?.id}")
+                    plus("/$userId/")
+                }
+            }
+        return createRetrofit(baseUrl).build()
+    }
 
     private fun createRetrofit(url: String) = Retrofit.Builder()
         .baseUrl(url)
         .client(createOkHttpClient())
+        .addCallAdapterFactory(ResultAdapterFactory())
         .addConverterFactory(GsonConverterFactory.create())
 
     private fun createOkHttpClient(): OkHttpClient {

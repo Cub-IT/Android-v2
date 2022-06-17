@@ -1,4 +1,13 @@
 package com.example.feature_group.presentation.group
 
-class GroupUiEvent {
+import com.example.core.presentation.UiEvent
+
+sealed class GroupUiEvent : UiEvent() {
+
+    object LoadGroup : GroupUiEvent()
+
+    object UserAvatarClicked : GroupUiEvent()
+
+    object BackClicked : GroupUiEvent()
+
 }
