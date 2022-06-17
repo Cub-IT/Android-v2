@@ -1,6 +1,7 @@
 package com.example.cubit.di
 
 import com.example.core.data.local.UserSource
+import com.example.core.data.remote.ResultAdapterFactory
 import com.example.core.util.API_URL
 import dagger.Module
 import dagger.Provides
@@ -34,6 +35,7 @@ object NetworkModule {
     private fun createRetrofit(url: String) = Retrofit.Builder()
         .baseUrl(url)
         .client(createOkHttpClient())
+        .addCallAdapterFactory(ResultAdapterFactory())
         .addConverterFactory(GsonConverterFactory.create())
 
     private fun createOkHttpClient(): OkHttpClient {

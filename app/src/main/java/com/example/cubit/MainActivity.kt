@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Inject
-    lateinit var factory: SignUpViewModel.Factory
+    lateinit var factory: SignInViewModel.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
                     val viewModel by viewModelCreator {
                         factory.create({}, {})
                     }
-                    SingUpScreen(viewModel = viewModel)
+                    SingInScreen(viewModel = viewModel)
                     //GroupListScreen(viewModel = viewModel)
                 }
             }
