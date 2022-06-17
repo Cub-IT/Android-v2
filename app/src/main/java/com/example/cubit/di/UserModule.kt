@@ -1,7 +1,7 @@
 package com.example.cubit.di
 
 import com.example.core.data.local.UserSource
-import com.example.feature_auth.data.local.UserDataStore
+import com.example.feature_auth.data.local.UserSharedPreferences
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,6 +14,6 @@ abstract class UserModule {
 
     @Binds
     @Singleton
-    abstract fun provideUserSource(userDataStore: UserDataStore): UserSource
+    abstract fun provideUserSource(userSharedPreferences: UserSharedPreferences): UserSource
 
 }
