@@ -2,63 +2,74 @@ package com.example.cubit.navigation.flow
 
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import com.example.core.util.viewModelCreator
-import com.example.cubit.navigation.navigator.GroupNavigator
 import com.example.cubit.navigation.navigator.NavigationFlow
+import com.example.cubit.navigation.navigator.Navigator
 import com.example.feature_group.presentation.group.GroupViewModel
 import com.example.feature_group.presentation.group_list.GroupListViewModel
-import javax.inject.Inject
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ActivityComponent
 
 class GroupNavigationFlow constructor(
     private val activity: ComponentActivity,
-    private val navController: NavController
+    private val navigator: Navigator
 ) : NavigationFlow {
 
-    @Inject
-    lateinit var groupListViewModelFactory: GroupListViewModel.Factory
-    @Inject
-    lateinit var groupViewModelFactory: GroupViewModel.Factory
+    // injecting userSource
+    @EntryPoint
+    @InstallIn(ActivityComponent::class)
+    interface GroupNavigationFlowProviderEntryPoint {
+        fun groupListViewModelFactory(): GroupListViewModel.Factory
+        fun groupViewModelFactory(): GroupViewModel.Factory
+    }
 
     private lateinit var exit: () -> Unit
-    private lateinit var groupNavigator: GroupNavigator
+    private lateinit var groupNavigationFlowProviderEntryPoint: GroupNavigationFlowProviderEntryPoint
 
     fun start(exit: () -> Unit) {
         this.exit = exit
-        groupNavigator = GroupNavigator(navController = navController, navigationFlow = this)
-        groupNavigator.navigateTo(
-            GroupNavigator.GroupNavTarget.Screen.GroupList
+        groupNavigationFlowProviderEntryPoint = EntryPointAccessors
+            .fromActivity(activity, GroupNavigationFlowProviderEntryPoint::class.java)
+
+        navigator.navigateTo(
+            navTarget = Navigator.NavTarget.Screen.Group.GroupList,
+            navigationFlow = this
         )
     }
 
     private fun onGroupListScreen(): GroupListViewModel {
-        return groupListViewModelFactory.create(
+        return groupNavigationFlowProviderEntryPoint.groupListViewModelFactory().create(
             onGroupClicked = { groupId ->
-                groupNavigator.navigateTo(GroupNavigator.GroupNavTarget.Screen.Group(groupId = groupId))
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Screen.Group.Group(groupId = groupId),
+                    navigationFlow = this
+                )
             },
             onUserAvatarClicked = { /* TODO: implement user profile screen */ }
         )
     }
 
     private fun onGroupScreen(): GroupViewModel {
-        return groupViewModelFactory.create(
-            onBackClicked = { groupNavigator.navigateTo(GroupNavigator.GroupNavTarget.Screen.GroupList) },
+        return groupNavigationFlowProviderEntryPoint.groupViewModelFactory().create(
+            onBackClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Screen.Group.GroupList,
+                    navigationFlow = this
+                )
+            },
             onUserAvatarClicked = { /* TODO: implement user profile screen */ }
         )
     }
 
     override fun <T : ViewModel> getViewModel(modelClass: Class<T>): T {
         return when (modelClass) {
-            GroupListViewModel::class.java -> activity.viewModelCreator { onGroupListScreen() }
-            GroupViewModel::class.java -> activity.viewModelCreator { onGroupScreen() }
+            GroupListViewModel::class.java -> activity.viewModelCreator { onGroupListScreen() }.value
+            GroupViewModel::class.java -> activity.viewModelCreator { onGroupScreen() }.value
 
             else -> throw IllegalArgumentException("No ViewModel registered for $modelClass")
         } as T
     }
-
-    override fun getStartDestination(): String {
-        return "" // TODO
-    }
-
 
 }

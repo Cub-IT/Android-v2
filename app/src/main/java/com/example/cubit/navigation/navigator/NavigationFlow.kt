@@ -4,5 +4,4 @@ import androidx.lifecycle.ViewModel
 
 interface NavigationFlow {
     fun <T : ViewModel> getViewModel(modelClass: Class<T>): T
-    fun getStartDestination(): String
 }

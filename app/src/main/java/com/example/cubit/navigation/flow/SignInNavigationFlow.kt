@@ -2,61 +2,71 @@ package com.example.cubit.navigation.flow
 
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import com.example.core.util.viewModelCreator
-import com.example.cubit.navigation.navigator.AuthNavigator
-import com.example.cubit.navigation.navigator.GroupNavigator
 import com.example.cubit.navigation.navigator.NavigationFlow
+import com.example.cubit.navigation.navigator.Navigator
 import com.example.feature_auth.presentation.sign_in.SignInViewModel
 import com.example.feature_auth.presentation.sign_up.SignUpViewModel
-import javax.inject.Inject
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ActivityComponent
 
-class  SignInNavigationFlow constructor(
-    private val activity: ComponentActivity, // TODO: pass lambda instead of the actual objects
-    private val navController: NavController
+class  SignInNavigationFlow(
+    private val activity: ComponentActivity, // TODO: pass lambda instead of the actual objects ???
+    private val navigator: Navigator
 ) : NavigationFlow {
 
-    @Inject
-    lateinit var signInViewModelFactory: SignInViewModel.Factory
-    @Inject
-    lateinit var signUpViewModelFactory: SignUpViewModel.Factory
+    // injecting userSource
+    @EntryPoint
+    @InstallIn(ActivityComponent::class)
+    interface SignViewModelFactoryProviderEntryPoint {
+        fun signInViewModelFactory(): SignInViewModel.Factory
+        fun signUpViewModelFactory(): SignUpViewModel.Factory
+    }
 
     private lateinit var exit: () -> Unit
-    private lateinit var authNavigator: AuthNavigator
+    private lateinit var signViewModelFactoryProviderEntryPoint: SignViewModelFactoryProviderEntryPoint
 
     fun start(exit: () -> Unit) {
         this.exit = exit
-        authNavigator = AuthNavigator(navController = navController, navigationFlow = this)
-        authNavigator.navigateTo(
-            AuthNavigator.AuthNavTarget.Screen.SignIn
+        signViewModelFactoryProviderEntryPoint = EntryPointAccessors
+            .fromActivity(activity, SignViewModelFactoryProviderEntryPoint::class.java)
+
+        navigator.navigateTo(
+            navTarget = Navigator.NavTarget.Screen.Auth.SignIn,
+            navigationFlow = this
         )
     }
 
     private fun onSignInScreen(): SignInViewModel {
-        return signInViewModelFactory.create(
+        return signViewModelFactoryProviderEntryPoint.signInViewModelFactory().create(
             onSignInClicked = exit,
-            onSignUpClicked = { authNavigator.navigateTo(AuthNavigator.AuthNavTarget.Screen.SignUp) }
+            onSignUpClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Screen.Auth.SignUp,
+                    navigationFlow = this
+                )
+            }
         )
     }
 
     private fun onSignUpScreen(): SignUpViewModel {
-        return signUpViewModelFactory.create(
-            onSignInClicked = { authNavigator.navigateTo(AuthNavigator.AuthNavTarget.Back) },
-            onSignUpClicked = { authNavigator.navigateTo(AuthNavigator.AuthNavTarget.Back) }
+        return signViewModelFactoryProviderEntryPoint.signUpViewModelFactory().create(
+            onSignInClicked = {
+                navigator.navigateTo(navTarget = Navigator.NavTarget.Back, navigationFlow = this)
+            },
+            onSignUpClicked = exit
         )
     }
 
     override fun <T : ViewModel> getViewModel(modelClass: Class<T>): T {
-        return when (modelClass) {
-            SignInViewModel::class.java -> activity.viewModelCreator { onSignInScreen() }
-            SignUpViewModel::class.java -> activity.viewModelCreator { onSignUpScreen() }
+        return when (modelClass.name) {
+            SignInViewModel::class.java.name -> activity.viewModelCreator { onSignInScreen() }.value
+            SignUpViewModel::class.java.name -> activity.viewModelCreator { onSignUpScreen() }.value
 
             else -> throw IllegalArgumentException("No ViewModel registered for $modelClass")
         } as T
-    }
-
-    override fun getStartDestination(): String {
-        return "" //TODO("Not yet implemented")
     }
 
 }

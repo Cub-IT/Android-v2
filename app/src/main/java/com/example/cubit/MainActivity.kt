@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
 import com.example.core.presentation.theme.CubITTheme
 import com.example.cubit.navigation.RootNavigationFlow
+import com.example.cubit.navigation.navigator.Navigator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,7 +25,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val rootNavigationFlow = RootNavigationFlow(this)
+                    val navController = rememberNavController()
+                    val navigator = Navigator(navController)
+                    navigator.SetupNavGraph()
+
+                    val rootNavigationFlow = RootNavigationFlow(this, navigator)
                     rootNavigationFlow.start()
                 }
             }
