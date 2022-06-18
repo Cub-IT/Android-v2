@@ -21,9 +21,10 @@ class AuthService @Inject constructor(
         return authApi.signIn(signInRequestEntry = signInRequestEntry)
     }
 
-    suspend fun signUp(name: String, email: String, password: String): Result<SignResponseEntry, Exception> {
+    suspend fun signUp(firstName: String, lastName: String, email: String, password: String): Result<SignResponseEntry, Exception> {
         val signUpRequestEntry = SignUpRequestEntry(
-            name = name,
+            firstName = firstName,
+            lastName = lastName,
             email = email,
             password = password
         )

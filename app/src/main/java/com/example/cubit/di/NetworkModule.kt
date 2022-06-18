@@ -21,12 +21,13 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(userSource: UserSource): Retrofit {
-        val baseUrl = "$API_URL/api/v1/user/"
+        val baseUrl = API_URL
+            .plus("api/v1/user/")
             .apply {
                 if (userSource.isAuthorized()) {
                     val userId = userSource.getUser()?.id
                         ?: throw IllegalStateException("User is authorized but user's id is ${userSource.getUser()?.id}")
-                    plus("/$userId/")
+                    plus("$userId/")
                 }
             }
         return createRetrofit(baseUrl).build()

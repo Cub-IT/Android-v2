@@ -183,7 +183,8 @@ class SignUpViewModel @AssistedInject constructor(
     private fun signUp(user: UserRegistrationItem) {
         viewModelScope.launch {
             authRepository.signUp(
-                name = user.firstName.value,
+                firstName = user.firstName.value,
+                lastName = user.lastName.value,
                 email = user.email.value,
                 password = user.password.value
             ).result(

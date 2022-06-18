@@ -21,8 +21,8 @@ class AuthRepository @Inject constructor(
         return Result.Success(Unit)
     }
 
-    suspend fun signUp(name: String, email: String, password: String): Result<Unit, Exception> {
-        val userItem = authService.signUp(name = name, email = email, password = password)
+    suspend fun signUp(firstName: String, lastName: String, email: String, password: String): Result<Unit, Exception> {
+        val userItem = authService.signUp(firstName = firstName, lastName = lastName, email = email, password = password)
             .onFailure { return it }
             .toUserItem()
 
