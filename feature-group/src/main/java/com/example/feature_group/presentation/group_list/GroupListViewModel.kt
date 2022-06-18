@@ -17,7 +17,7 @@ class GroupListViewModel @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(
-            @Assisted onGroupClicked: (GroupId: String) -> Unit,
+            @Assisted onGroupClicked: (groupId: String) -> Unit,
             @Assisted onUserAvatarClicked: () -> Unit
         ): GroupListViewModel
     }

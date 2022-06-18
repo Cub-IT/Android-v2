@@ -3,47 +3,18 @@ package com.example.cubit
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
+import androidx.navigation.compose.rememberNavController
 import com.example.core.presentation.theme.CubITTheme
-import com.example.core.util.ViewModelCreator
-import com.example.core.util.ViewModelFactory
-import com.example.feature_auth.presentation.sign_in.SignInViewModel
-import com.example.feature_auth.presentation.sign_in.SingInScreen
-import com.example.feature_auth.presentation.sign_up.SignUpViewModel
-import com.example.feature_auth.presentation.sign_up.SingUpScreen
-import com.example.feature_group.presentation.common.item.GroupItem
-import com.example.feature_group.presentation.group.composable.GroupHeaderCard
-import com.example.feature_group.presentation.group.composable.Task
-import com.example.feature_group.presentation.group.composable.TaskList
-import com.example.feature_group.presentation.group.item.PostItem
-import com.example.feature_group.presentation.group_list.GroupListScreen
-import com.example.feature_group.presentation.group_list.GroupListViewModel
-import com.example.feature_group.presentation.group_list.composable.GroupCard
+import com.example.cubit.navigation.RootNavigationFlow
+import com.example.cubit.navigation.navigator.Navigator
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    inline fun <reified VM : ViewModel> ComponentActivity.viewModelCreator(
-        noinline creator: ViewModelCreator<VM>
-    ): Lazy<VM> {
-        return viewModels { ViewModelFactory(creator) }
-    }
-
-    @Inject
-    lateinit var factory: SignUpViewModel.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,28 +25,15 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //Greeting("Android")
+                    val navController = rememberNavController()
+                    val navigator = Navigator(navController)
+                    navigator.SetupNavGraph()
 
-                    val viewModel by viewModelCreator {
-                        factory.create({}, {})
-                    }
-                    SingUpScreen(viewModel = viewModel)
-                    //GroupListScreen(viewModel = viewModel)
+                    val rootNavigationFlow = RootNavigationFlow(this, navigator)
+                    rootNavigationFlow.start()
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    CubITTheme {
-        Greeting("Android")
-    }
 }
