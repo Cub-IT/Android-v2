@@ -8,6 +8,10 @@ import com.example.feature_auth.presentation.sign_in.SignInViewModel
 import com.example.feature_auth.presentation.sign_in.SingInScreen
 import com.example.feature_auth.presentation.sign_up.SignUpViewModel
 import com.example.feature_auth.presentation.sign_up.SingUpScreen
+import com.example.feature_group.presentation.group.GroupScreen
+import com.example.feature_group.presentation.group.GroupViewModel
+import com.example.feature_group.presentation.group_list.GroupListScreen
+import com.example.feature_group.presentation.group_list.GroupListViewModel
 
 class Navigator (
     private val navController: NavHostController
@@ -49,7 +53,7 @@ class Navigator (
     fun SetupNavGraph() { // TODO: maybe move composable destinations to separate classes ???
         NavHost(
             navController = navController,
-            startDestination = NavTarget.Screen.Auth.SignIn.route,
+            startDestination = NavTarget.Screen.Auth.SignIn.route
         ) {
             composable(route = NavTarget.Screen.Auth.SignIn.route) {
                 val vm = navigationFlow?.getViewModel(modelClass = SignInViewModel::class.java)
@@ -66,17 +70,17 @@ class Navigator (
             }
 
             composable(route = NavTarget.Screen.Group.GroupList.route) {
-                val vm = navigationFlow?.getViewModel(modelClass = SignInViewModel::class.java)
+                val vm = navigationFlow?.getViewModel(modelClass = GroupListViewModel::class.java)
                     ?: throw IllegalStateException()
                 //navigationFlow = null
-                SingInScreen(viewModel = vm)
+                GroupListScreen(viewModel = vm)
             }
 
             composable(route = NavTarget.Screen.Group.Group(groupId = "{groupId}").route) {
-                val vm = navigationFlow?.getViewModel(modelClass = SignUpViewModel::class.java)
+                val vm = navigationFlow?.getViewModel(modelClass = GroupViewModel::class.java)
                     ?: throw IllegalStateException()
                 //navigationFlow = null
-                SingUpScreen(viewModel = vm)
+                GroupScreen(viewModel = vm)
             }
         }
     }
