@@ -1,9 +1,7 @@
 package com.example.cubit.navigation.navigator
 
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
+import androidx.navigation.*
 import androidx.navigation.compose.composable
-import com.example.cubit.navigation.flow.NavigationFlow
 import com.example.feature_auth.presentation.sign_in.SignInViewModel
 import com.example.feature_auth.presentation.sign_in.SingInScreen
 import com.example.feature_auth.presentation.sign_up.SignUpViewModel
@@ -13,7 +11,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthNavigator @Inject constructor(
-    private val navController: NavHostController,
+    private val navController: NavController,
     private val navigationFlow: NavigationFlow
 ) {
 
@@ -35,15 +33,24 @@ class AuthNavigator @Inject constructor(
     }
 
     val navGraph: NavGraphBuilder.() -> Unit = {
-        composable(route = AuthNavTarget.Screen.SignIn.route) {
-            val vm = navigationFlow.getViewModel(modelClass = SignInViewModel::class.java)
-            SingInScreen(viewModel = vm)
-        }
+        navigation(
+            startDestination = navigationFlow.getStartDestination(),
+            route = AUTH_ROUTE
+        ) {
+            composable(route = AuthNavTarget.Screen.SignIn.route) {
+                val vm = navigationFlow.getViewModel(modelClass = SignInViewModel::class.java)
+                SingInScreen(viewModel = vm)
+            }
 
-        composable(route = AuthNavTarget.Screen.SignUp.route) {
-            val vm = navigationFlow.getViewModel(modelClass = SignUpViewModel::class.java)
-            SingUpScreen(viewModel = vm)
+            composable(route = AuthNavTarget.Screen.SignUp.route) {
+                val vm = navigationFlow.getViewModel(modelClass = SignUpViewModel::class.java)
+                SingUpScreen(viewModel = vm)
+            }
         }
+    }
+
+    companion object {
+        const val AUTH_ROUTE = "authRoute"
     }
 
 }

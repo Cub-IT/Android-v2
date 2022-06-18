@@ -1,5 +1,7 @@
 package com.example.core.util
 
+import androidx.activity.ComponentActivity
+import androidx.activity.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
@@ -13,4 +15,10 @@ class ViewModelFactory<VM : ViewModel>(
         return viewModelCreator() as T
     }
 
+}
+
+inline fun <reified VM : ViewModel> ComponentActivity.viewModelCreator(
+    noinline creator: ViewModelCreator<VM>
+): Lazy<VM> {
+    return viewModels { ViewModelFactory(creator) }
 }
