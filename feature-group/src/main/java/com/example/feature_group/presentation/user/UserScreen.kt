@@ -1,9 +1,6 @@
 package com.example.feature_group.presentation.user
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -40,23 +37,30 @@ fun UserScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(it)
         ) {
             if (uiState is UserUiState.UpdatingUserItem) {
-                LinearProgressIndicator()
+                LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
 
-            IconAvatar(color = Color(0xFF3B79E8), size = 40.dp)
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                IconAvatar(color = Color(0xFF3B79E8), size = 96.dp)
 
-            Spacer(modifier = Modifier.padding(16.dp))
-            Text(text = "${uiState.userItem.firstName} ${uiState.userItem.lastName}")
-            Divider()
-            Text(text = uiState.userItem.email)
-            Spacer(modifier = Modifier.padding(64.dp))
+                Spacer(modifier = Modifier.padding(16.dp))
+                Text(text = "${uiState.userItem.firstName} ${uiState.userItem.lastName}")
+                Divider(modifier = Modifier.width(32.dp).padding(vertical = 12.dp))
+                Text(text = uiState.userItem.email)
+                Spacer(modifier = Modifier.padding(64.dp))
 
-            OutlinedButton(onClick = { viewModel.handleEvent(event = UserUiEvent.LogoutClicked) }) {
-                Text(text = "Logout")
+                OutlinedButton(onClick = { viewModel.handleEvent(event = UserUiEvent.LogoutClicked) }) {
+                    Text(text = "Logout")
+                }
             }
         }
     }
