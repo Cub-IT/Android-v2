@@ -14,6 +14,8 @@ import com.example.feature_auth.presentation.sign_up.SignUpViewModel
 import com.example.feature_auth.presentation.sign_up.SingUpScreen
 import com.example.feature_group.presentation.add_group.AddGroupScreen
 import com.example.feature_group.presentation.add_group.AddGroupViewModel
+import com.example.feature_group.presentation.add_post.AddPostScreen
+import com.example.feature_group.presentation.add_post.AddPostViewModel
 import com.example.feature_group.presentation.group.GroupScreen
 import com.example.feature_group.presentation.group.GroupViewModel
 import com.example.feature_group.presentation.group_list.GroupListScreen
@@ -65,6 +67,8 @@ class Navigator (
                 object AddGroup : Screen.Group(route = "addGroup")
 
                 object JoinGroup : Screen.Group(route = "joinGroup")
+
+                object AddPost : Screen.Group(route = "addPost")
             }
         }
     }
@@ -129,6 +133,14 @@ class Navigator (
                     ?: throw IllegalStateException()
                 //navigationFlow = null
                 JoinGroupScreen(viewModel = vm)
+            }
+
+            composable(route = NavTarget.Screen.Group.AddPost.route) {
+                val vm = navigationFlow?.getViewModel(modelClass = AddPostViewModel::class.java)
+                    ?: previousNavigationFLow?.getViewModel(modelClass = AddPostViewModel::class.java) // TODO: get rid of it
+                    ?: throw IllegalStateException()
+                //navigationFlow = null
+                AddPostScreen(viewModel = vm)
             }
         }
     }

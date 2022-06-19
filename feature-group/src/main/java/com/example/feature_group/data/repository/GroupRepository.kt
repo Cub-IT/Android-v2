@@ -31,4 +31,8 @@ class GroupRepository @Inject constructor(
         TODO()
     }
 
+    suspend fun createPost(content: String): Result<Unit, Exception> {
+        TODO()
+    }
+
 }
