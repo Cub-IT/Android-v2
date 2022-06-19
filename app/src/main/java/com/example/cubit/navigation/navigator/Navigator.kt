@@ -18,6 +18,8 @@ import com.example.feature_group.presentation.group.GroupScreen
 import com.example.feature_group.presentation.group.GroupViewModel
 import com.example.feature_group.presentation.group_list.GroupListScreen
 import com.example.feature_group.presentation.group_list.GroupListViewModel
+import com.example.feature_group.presentation.join_group.JoinGroupScreen
+import com.example.feature_group.presentation.join_group.JoinGroupViewModel
 import com.example.feature_group.presentation.user.UserScreen
 import com.example.feature_group.presentation.user.UserViewModel
 
@@ -61,6 +63,8 @@ class Navigator (
                 object User : Screen(route = "user")
 
                 object AddGroup : Screen.Group(route = "addGroup")
+
+                object JoinGroup : Screen.Group(route = "joinGroup")
             }
         }
     }
@@ -117,6 +121,14 @@ class Navigator (
                     ?: throw IllegalStateException()
                 //navigationFlow = null
                 AddGroupScreen(viewModel = vm)
+            }
+
+            composable(route = NavTarget.Screen.Group.JoinGroup.route) {
+                val vm = navigationFlow?.getViewModel(modelClass = JoinGroupViewModel::class.java)
+                    ?: previousNavigationFLow?.getViewModel(modelClass = JoinGroupViewModel::class.java) // TODO: get rid of it
+                    ?: throw IllegalStateException()
+                //navigationFlow = null
+                JoinGroupScreen(viewModel = vm)
             }
         }
     }

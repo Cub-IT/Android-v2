@@ -3,4 +3,5 @@
     <string name="no_groups">There are no groups yet</string>
     <string name="group_name">Group name (required)</string>
     <string name="group_description">Description</string>
+    <string name="group_code">Group code</string>
 </resources>
