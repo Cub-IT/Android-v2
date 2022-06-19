@@ -46,7 +46,7 @@ class GroupListViewModel @AssistedInject constructor(
                 loadGroups()
             }
             is GroupListUiEvent.OpenGroup -> throw IllegalStateException()
-            is GroupListUiEvent.UserAvatarClicked -> onUserAvatarClicked
+            is GroupListUiEvent.UserAvatarClicked -> onUserAvatarClicked()
         }
     }
 
@@ -58,7 +58,7 @@ class GroupListViewModel @AssistedInject constructor(
                 loadGroups()
             }
             is GroupListUiEvent.OpenGroup -> onGroupClicked(event.groupId)
-            is GroupListUiEvent.UserAvatarClicked -> onUserAvatarClicked
+            is GroupListUiEvent.UserAvatarClicked -> onUserAvatarClicked()
         }
     }
 
@@ -67,7 +67,7 @@ class GroupListViewModel @AssistedInject constructor(
             is GroupListUiEvent.AddButtonClicked -> TODO()
             is GroupListUiEvent.LoadGroups -> { }
             is GroupListUiEvent.OpenGroup -> throw IllegalStateException()
-            is GroupListUiEvent.UserAvatarClicked -> onUserAvatarClicked
+            is GroupListUiEvent.UserAvatarClicked -> onUserAvatarClicked()
         }
     }
 

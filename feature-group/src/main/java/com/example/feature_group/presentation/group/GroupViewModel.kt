@@ -14,8 +14,7 @@ import kotlinx.coroutines.launch
 
 class GroupViewModel @AssistedInject constructor(
     @Assisted("back") private val onBackClicked: () -> Unit,
-    @Assisted("userAvatar") private val onUserAvatarClicked: () -> Unit,
-
+    @Assisted("userAvatar") private val onUserAvatarClicked: () -> Unit
 ) : BaseViewModel<GroupUiEvent, GroupUiState>() {
 
     @AssistedFactory
