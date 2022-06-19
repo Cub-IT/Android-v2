@@ -1,6 +1,10 @@
 package com.example.cubit.navigation.navigator
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,12 +25,16 @@ class Navigator (
     private val navController: NavHostController
 ) {
 
+    private var previousNavigationFLow: NavigationFlow? = null
     private var navigationFlow: NavigationFlow? = null
 
     fun navigateTo(
         navTarget: NavTarget,
         navigationFlow: NavigationFlow
     ) {
+        if (this.navigationFlow != navigationFlow) {
+            previousNavigationFLow = this.navigationFlow
+        }
         this.navigationFlow = navigationFlow
 
         when (navTarget) {
@@ -61,10 +69,11 @@ class Navigator (
     fun SetupNavGraph() { // TODO: maybe move composable destinations to separate classes ???
         NavHost(
             navController = navController,
-            startDestination = NavTarget.Screen.Auth.SignIn.route
+            startDestination = NavTarget.Screen.Auth.SignIn.route // TODO: it just to fill the gap. this dest is never called
         ) {
             composable(route = NavTarget.Screen.Auth.SignIn.route) {
                 val vm = navigationFlow?.getViewModel(modelClass = SignInViewModel::class.java)
+                    ?: previousNavigationFLow?.getViewModel(modelClass = SignInViewModel::class.java) // TODO: get rid of it
                     ?: throw IllegalStateException()
                 //navigationFlow = null
                 SingInScreen(viewModel = vm)
@@ -72,6 +81,7 @@ class Navigator (
 
             composable(route = NavTarget.Screen.Auth.SignUp.route) {
                 val vm = navigationFlow?.getViewModel(modelClass = SignUpViewModel::class.java)
+                    ?: previousNavigationFLow?.getViewModel(modelClass = SignUpViewModel::class.java) // TODO: get rid of it
                     ?: throw IllegalStateException()
                 //navigationFlow = null
                 SingUpScreen(viewModel = vm)
@@ -79,6 +89,7 @@ class Navigator (
 
             composable(route = NavTarget.Screen.Group.GroupList.route) {
                 val vm = navigationFlow?.getViewModel(modelClass = GroupListViewModel::class.java)
+                    ?: previousNavigationFLow?.getViewModel(modelClass = GroupListViewModel::class.java) // TODO: get rid of it
                     ?: throw IllegalStateException()
                 //navigationFlow = null
                 GroupListScreen(viewModel = vm)
@@ -86,6 +97,7 @@ class Navigator (
 
             composable(route = NavTarget.Screen.Group.Group(groupId = "{groupId}").route) {
                 val vm = navigationFlow?.getViewModel(modelClass = GroupViewModel::class.java)
+                    ?: previousNavigationFLow?.getViewModel(modelClass = GroupViewModel::class.java) // TODO: get rid of it
                     ?: throw IllegalStateException()
                 //navigationFlow = null
                 GroupScreen(viewModel = vm)
@@ -93,6 +105,7 @@ class Navigator (
 
             composable(route = NavTarget.Screen.Group.User.route) {
                 val vm = navigationFlow?.getViewModel(modelClass = UserViewModel::class.java)
+                    ?: previousNavigationFLow?.getViewModel(modelClass = UserViewModel::class.java) // TODO: get rid of it
                     ?: throw IllegalStateException()
                 //navigationFlow = null
                 UserScreen(viewModel = vm)
@@ -100,6 +113,7 @@ class Navigator (
 
             composable(route = NavTarget.Screen.Group.AddGroup.route) {
                 val vm = navigationFlow?.getViewModel(modelClass = AddGroupViewModel::class.java)
+                    ?: previousNavigationFLow?.getViewModel(modelClass = AddGroupViewModel::class.java) // TODO: get rid of it
                     ?: throw IllegalStateException()
                 //navigationFlow = null
                 AddGroupScreen(viewModel = vm)

@@ -113,15 +113,16 @@ class GroupNavigationFlow constructor(
         )
     }
 
-    override fun <T : ViewModel> getViewModel(modelClass: Class<T>): T {
+    override fun <T : ViewModel> getViewModel(modelClass: Class<T>): T? {
         return when (modelClass) {
             GroupListViewModel::class.java -> activity.viewModelCreator { onGroupListScreen() }.value
             GroupViewModel::class.java -> activity.viewModelCreator { onGroupScreen() }.value
             UserViewModel::class.java -> activity.viewModelCreator { onUserScreen() }.value
             AddGroupViewModel::class.java -> activity.viewModelCreator { onAddGroupScreen() }.value
 
-            else -> throw IllegalArgumentException("No ViewModel registered for $modelClass")
-        } as T
+            //else -> throw IllegalArgumentException("No ViewModel registered for $modelClass")
+            else -> null
+        } as? T
     }
 
 }

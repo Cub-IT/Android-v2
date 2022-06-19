@@ -60,13 +60,14 @@ class  SignInNavigationFlow(
         )
     }
 
-    override fun <T : ViewModel> getViewModel(modelClass: Class<T>): T {
+    override fun <T : ViewModel> getViewModel(modelClass: Class<T>): T? {
         return when (modelClass.name) {
             SignInViewModel::class.java.name -> activity.viewModelCreator { onSignInScreen() }.value
             SignUpViewModel::class.java.name -> activity.viewModelCreator { onSignUpScreen() }.value
 
-            else -> throw IllegalArgumentException("No ViewModel registered for $modelClass")
-        } as T
+            //else -> throw IllegalArgumentException("No ViewModel registered for $modelClass")
+            else -> null
+        } as? T
     }
 
 }
