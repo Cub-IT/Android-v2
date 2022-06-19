@@ -39,6 +39,13 @@ object InputLinterModule {
         .addRule(errorMessage = R.string.short_name) { input -> input.isNotEmpty() }
         .addRule(errorMessage = R.string.long_name) { input -> input.length < 45 }
 
+    @Provides
+    @Singleton
+    @Named("longNameLinter")
+    fun provideLongNameLinter() = InputLinter()
+        .addRule(errorMessage = R.string.short_name) { input -> input.isNotEmpty() }
+        .addRule(errorMessage = R.string.long_name) { input -> input.length < 45 }
+
     private fun String.hasDigit() = this.any { it.isDigit() }
 
     private fun String.hasUpperCase() = this.any { it.isUpperCase() }

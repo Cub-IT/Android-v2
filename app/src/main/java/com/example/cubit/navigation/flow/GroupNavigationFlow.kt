@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.core.util.viewModelCreator
 import com.example.cubit.navigation.navigator.NavigationFlow
 import com.example.cubit.navigation.navigator.Navigator
+import com.example.feature_group.presentation.add_group.AddGroupViewModel
 import com.example.feature_group.presentation.group.GroupViewModel
 import com.example.feature_group.presentation.group_list.GroupListViewModel
 import com.example.feature_group.presentation.user.UserViewModel
@@ -26,6 +27,7 @@ class GroupNavigationFlow constructor(
         fun groupListViewModelFactory(): GroupListViewModel.Factory
         fun groupViewModelFactory(): GroupViewModel.Factory
         fun userViewModelFactory(): UserViewModel.Factory
+        fun addGroupViewModelFactory(): AddGroupViewModel.Factory
     }
 
     private lateinit var exit: () -> Unit
@@ -51,9 +53,14 @@ class GroupNavigationFlow constructor(
                 )
             },
             onUserAvatarClicked = {
-                Log.d("TAG", "onGroupListScreen: Avatar clicked!!!")
                 navigator.navigateTo(
                     navTarget = Navigator.NavTarget.Screen.Group.User,
+                    navigationFlow = this
+                )
+            },
+            onFabClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Screen.Group.AddGroup,
                     navigationFlow = this
                 )
             }
@@ -89,11 +96,29 @@ class GroupNavigationFlow constructor(
         )
     }
 
+    private fun onAddGroupScreen(): AddGroupViewModel {
+        return groupNavigationFlowProviderEntryPoint.addGroupViewModelFactory().create(
+            onCreateClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Back,
+                    navigationFlow = this
+                )
+            },
+            onBackClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Back,
+                    navigationFlow = this
+                )
+            }
+        )
+    }
+
     override fun <T : ViewModel> getViewModel(modelClass: Class<T>): T {
         return when (modelClass) {
             GroupListViewModel::class.java -> activity.viewModelCreator { onGroupListScreen() }.value
             GroupViewModel::class.java -> activity.viewModelCreator { onGroupScreen() }.value
             UserViewModel::class.java -> activity.viewModelCreator { onUserScreen() }.value
+            AddGroupViewModel::class.java -> activity.viewModelCreator { onAddGroupScreen() }.value
 
             else -> throw IllegalArgumentException("No ViewModel registered for $modelClass")
         } as T

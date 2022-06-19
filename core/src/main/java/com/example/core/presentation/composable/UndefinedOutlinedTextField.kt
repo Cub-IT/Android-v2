@@ -1,4 +1,4 @@
-package com.example.feature_auth.presentation.common.composable
+package com.example.core.presentation.composable
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
@@ -10,15 +10,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import com.example.core.presentation.theme.Typography
-import com.example.feature_auth.presentation.common.item.InputFiled
+import com.example.core.presentation.item.InputFiled
 
 @Composable
 fun UndefinedOutlinedTextField(
     field: InputFiled,
     @StringRes label: Int,
-    keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier,
+    singleLine: Boolean = true,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
     onValueChange: (newValue: String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -26,15 +28,16 @@ fun UndefinedOutlinedTextField(
             value = field.value,
             onValueChange = onValueChange,
             isError =  field.error != null,
-            singleLine = true,
+            singleLine = singleLine,
+            maxLines = 5,
             keyboardOptions = keyboardOptions,
             modifier = modifier.fillMaxWidth(),
             label = { Text(text = stringResource(label)) },
             textStyle = Typography.bodyLarge
         )
-        if (field.error != null) {
+        field.error?.apply {
             Text(
-                text = stringResource(field.error),
+                text = stringResource(this),
                 style = Typography.labelMedium,
                 color = MaterialTheme.colorScheme.error
             )

@@ -13,7 +13,8 @@ import kotlinx.coroutines.launch
 
 class GroupListViewModel @AssistedInject constructor(
     @Assisted private val onGroupClicked: (GroupId: String) -> Unit,
-    @Assisted private val onUserAvatarClicked: () -> Unit,
+    @Assisted("userAvatar") private val onUserAvatarClicked: () -> Unit,
+    @Assisted("fab") private val onFabClicked: () -> Unit,
     private val groupRepository: GroupRepository
 ) : BaseViewModel<GroupListUiEvent, GroupListUiState>() {
 
@@ -21,7 +22,8 @@ class GroupListViewModel @AssistedInject constructor(
     interface Factory {
         fun create(
             @Assisted onGroupClicked: (groupId: String) -> Unit,
-            @Assisted onUserAvatarClicked: () -> Unit
+            @Assisted("userAvatar") onUserAvatarClicked: () -> Unit,
+            @Assisted("fab") onFabClicked: () -> Unit
         ): GroupListViewModel
     }
 
@@ -40,7 +42,7 @@ class GroupListViewModel @AssistedInject constructor(
 
     private fun reduce(event: GroupListUiEvent, currentState: GroupListUiState.ErrorLoadingGroups) {
         when (event) {
-            is GroupListUiEvent.AddButtonClicked -> TODO()
+            is GroupListUiEvent.AddButtonClicked -> onFabClicked()
             is GroupListUiEvent.LoadGroups -> {
                 _uiState.value = GroupListUiState.LoadingGroups(groups = emptyList())
                 loadGroups()
@@ -52,7 +54,7 @@ class GroupListViewModel @AssistedInject constructor(
 
     private fun reduce(event: GroupListUiEvent, currentState: GroupListUiState.GroupsFetched) {
         when (event) {
-            is GroupListUiEvent.AddButtonClicked -> TODO()
+            is GroupListUiEvent.AddButtonClicked -> onFabClicked()
             is GroupListUiEvent.LoadGroups -> {
                 _uiState.value = GroupListUiState.LoadingGroups(groups = currentState.groups)
                 loadGroups()
@@ -64,7 +66,7 @@ class GroupListViewModel @AssistedInject constructor(
 
     private fun reduce(event: GroupListUiEvent, currentState: GroupListUiState.LoadingGroups) {
         when (event) {
-            is GroupListUiEvent.AddButtonClicked -> TODO()
+            is GroupListUiEvent.AddButtonClicked -> onFabClicked()
             is GroupListUiEvent.LoadGroups -> { }
             is GroupListUiEvent.OpenGroup -> throw IllegalStateException()
             is GroupListUiEvent.UserAvatarClicked -> onUserAvatarClicked()

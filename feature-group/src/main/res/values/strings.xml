@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="no_groups">There are no groups yet</string>
+    <string name="group_name">Group name (required)</string>
+    <string name="group_description">Description</string>
 </resources>
