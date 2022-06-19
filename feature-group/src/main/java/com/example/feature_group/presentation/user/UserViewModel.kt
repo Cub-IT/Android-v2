@@ -30,11 +30,6 @@ class UserViewModel @AssistedInject constructor(
 
     override fun createInitialState(): UserUiState {
         viewModelScope.launch {
-            delay(10)
-            _uiState.value = UserUiState.UpdatingUserItem(
-                userItem = userSource.getUser()
-                    ?: throw IllegalStateException("User is authorized but user's id is ${userSource.getUser()?.id}")
-            )
             updateUserData()
         }
 
@@ -69,10 +64,7 @@ class UserViewModel @AssistedInject constructor(
     private fun reduce(event: UserUiEvent, currentState: UserUiState.UserItemFetched) {
         when (event) {
             UserUiEvent.BackClicked -> onBackClicked()
-            UserUiEvent.UpdateUserData -> {
-                _uiState.value = UserUiState.UpdatingUserItem(userItem = currentState.userItem)
-                updateUserData()
-            }
+            UserUiEvent.UpdateUserData -> updateUserData()
             UserUiEvent.LogoutClicked -> {
                 userSource.deleteUser()
                 onLogoutClicked()
@@ -82,6 +74,12 @@ class UserViewModel @AssistedInject constructor(
 
     private fun updateUserData() {
         viewModelScope.launch {
+            delay(10)
+            _uiState.value = UserUiState.UserItemFetched(
+                userItem = userSource.getUser()
+                    ?: throw IllegalStateException("User is authorized but user's id is ${userSource.getUser()?.id}")
+            )
+            _uiState.value = UserUiState.UpdatingUserItem(userItem = uiState.value.userItem)
             // TODO: getting new user data
             delay(2000)
             _uiState.value = UserUiState.UserItemFetched(

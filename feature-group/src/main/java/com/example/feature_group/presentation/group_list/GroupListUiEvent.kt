@@ -8,7 +8,9 @@ sealed class GroupListUiEvent : UiEvent() {
 
     object UserAvatarClicked : GroupListUiEvent()
 
-    object AddButtonClicked : GroupListUiEvent()
+    object AddGroupClicked : GroupListUiEvent()
+
+    object JoinGroupClicked : GroupListUiEvent()
 
     data class OpenGroup(val groupId: String) : GroupListUiEvent()
 

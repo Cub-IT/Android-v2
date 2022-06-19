@@ -10,7 +10,7 @@ import retrofit2.http.POST
 
 interface AuthApi {
 
-    @POST("login")
+    @POST("/cub-it/rest/login")
     suspend fun signIn(
         @Body signInRequestEntry: SignInRequestEntry
     ): Result<SignResponseEntry, Exception>

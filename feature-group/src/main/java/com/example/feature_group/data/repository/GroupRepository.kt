@@ -19,4 +19,16 @@ class GroupRepository @Inject constructor(
         return Result.Success(groups)
     }
 
+    suspend fun getGroup(groupId: String): Result<GroupItem, Exception> {
+        TODO()
+    }
+
+    suspend fun createGroup(name: String, description: String): Result<Unit, Exception> {
+        TODO()
+    }
+
+    suspend fun joinToGroup(groupId: String): Result<Unit, Exception> {
+        TODO()
+    }
+
 }

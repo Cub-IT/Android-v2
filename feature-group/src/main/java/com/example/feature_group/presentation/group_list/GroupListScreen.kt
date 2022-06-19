@@ -1,8 +1,6 @@
 package com.example.feature_group.presentation.group_list
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Refresh
@@ -13,10 +11,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.core.presentation.composable.ErrorMessage
 import com.example.feature_group.presentation.common.composable.IconAvatar
 import com.example.feature_group.presentation.group_list.composable.GroupList
+import com.example.feature_group.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,10 +46,20 @@ fun GroupListScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                viewModel.handleEvent(event = GroupListUiEvent.AddButtonClicked)
-            }) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            Column {
+                FloatingActionButton(onClick = {
+                    viewModel.handleEvent(event = GroupListUiEvent.JoinGroupClicked)
+                }) {
+                    Icon(painter = painterResource(R.drawable.ic_baseline_group_add_24), contentDescription = null)
+                }
+
+                Spacer(modifier = Modifier.padding(8.dp))
+
+                FloatingActionButton(onClick = {
+                    viewModel.handleEvent(event = GroupListUiEvent.AddGroupClicked)
+                }) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                }
             }
         }
     ) {
@@ -57,7 +67,9 @@ fun GroupListScreen(
             is GroupListUiState.ErrorLoadingGroups -> {
                 ErrorMessage(
                     errorCause = (uiState as GroupListUiState.ErrorLoadingGroups).cause,
-                    modifier = Modifier.padding(it).padding(16.dp)
+                    modifier = Modifier
+                        .padding(it)
+                        .padding(16.dp)
                 )
             }
             is GroupListUiState.GroupsFetched -> {

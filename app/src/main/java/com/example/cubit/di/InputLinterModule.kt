@@ -39,6 +39,21 @@ object InputLinterModule {
         .addRule(errorMessage = R.string.short_name) { input -> input.isNotEmpty() }
         .addRule(errorMessage = R.string.long_name) { input -> input.length < 45 }
 
+    @Provides
+    @Singleton
+    @Named("longNameLinter")
+    fun provideLongNameLinter() = InputLinter()
+        .addRule(errorMessage = R.string.short_name) { input -> input.isNotEmpty() }
+        .addRule(errorMessage = R.string.long_name) { input -> input.length < 255 }
+
+    @Provides
+    @Singleton
+    @Named("groupCodeLinter")
+    fun provideGroupCodeLinter() = InputLinter()
+        .addRule(errorMessage = R.string.invalid_code_format) {input -> input.consistsOfDigits() }
+        .addRule(errorMessage = R.string.short_code) { input -> input.isNotEmpty() }
+        .addRule(errorMessage = R.string.long_code) { input -> input.length < 10 }
+
     private fun String.hasDigit() = this.any { it.isDigit() }
 
     private fun String.hasUpperCase() = this.any { it.isUpperCase() }
@@ -48,5 +63,7 @@ object InputLinterModule {
     private fun String.isFitted() = this.all { it.isLetterOrDigit() or "".contains(it) }
 
     private fun String.doesNotContain(prohibited: String) = this.none { prohibited.contains(it) }
+
+    private fun String.consistsOfDigits() = this.all { it.isDigit() }
 
 }

@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import com.example.core.util.viewModelCreator
 import com.example.cubit.navigation.navigator.NavigationFlow
 import com.example.cubit.navigation.navigator.Navigator
+import com.example.feature_group.presentation.add_group.AddGroupViewModel
 import com.example.feature_group.presentation.group.GroupViewModel
 import com.example.feature_group.presentation.group_list.GroupListViewModel
+import com.example.feature_group.presentation.join_group.JoinGroupViewModel
 import com.example.feature_group.presentation.user.UserViewModel
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -26,6 +28,8 @@ class GroupNavigationFlow constructor(
         fun groupListViewModelFactory(): GroupListViewModel.Factory
         fun groupViewModelFactory(): GroupViewModel.Factory
         fun userViewModelFactory(): UserViewModel.Factory
+        fun addGroupViewModelFactory(): AddGroupViewModel.Factory
+        fun joinGroupViewModelFactory(): JoinGroupViewModel.Factory
     }
 
     private lateinit var exit: () -> Unit
@@ -51,9 +55,20 @@ class GroupNavigationFlow constructor(
                 )
             },
             onUserAvatarClicked = {
-                Log.d("TAG", "onGroupListScreen: Avatar clicked!!!")
                 navigator.navigateTo(
                     navTarget = Navigator.NavTarget.Screen.Group.User,
+                    navigationFlow = this
+                )
+            },
+            onAddGroupClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Screen.Group.AddGroup,
+                    navigationFlow = this
+                )
+            },
+            onJoinGroupClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Screen.Group.JoinGroup,
                     navigationFlow = this
                 )
             }
@@ -89,14 +104,51 @@ class GroupNavigationFlow constructor(
         )
     }
 
-    override fun <T : ViewModel> getViewModel(modelClass: Class<T>): T {
+    private fun onAddGroupScreen(): AddGroupViewModel {
+        return groupNavigationFlowProviderEntryPoint.addGroupViewModelFactory().create(
+            onCreateClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Back,
+                    navigationFlow = this
+                )
+            },
+            onBackClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Back,
+                    navigationFlow = this
+                )
+            }
+        )
+    }
+
+    private fun onJoinGroupScreen(): JoinGroupViewModel {
+        return groupNavigationFlowProviderEntryPoint.joinGroupViewModelFactory().create(
+            onCreateClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Back,
+                    navigationFlow = this
+                )
+            },
+            onBackClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Back,
+                    navigationFlow = this
+                )
+            }
+        )
+    }
+
+    override fun <T : ViewModel> getViewModel(modelClass: Class<T>): T? {
         return when (modelClass) {
             GroupListViewModel::class.java -> activity.viewModelCreator { onGroupListScreen() }.value
             GroupViewModel::class.java -> activity.viewModelCreator { onGroupScreen() }.value
             UserViewModel::class.java -> activity.viewModelCreator { onUserScreen() }.value
+            AddGroupViewModel::class.java -> activity.viewModelCreator { onAddGroupScreen() }.value
+            JoinGroupViewModel::class.java -> activity.viewModelCreator { onJoinGroupScreen() }.value
 
-            else -> throw IllegalArgumentException("No ViewModel registered for $modelClass")
-        } as T
+            //else -> throw IllegalArgumentException("No ViewModel registered for $modelClass")
+            else -> null
+        } as? T
     }
 
 }

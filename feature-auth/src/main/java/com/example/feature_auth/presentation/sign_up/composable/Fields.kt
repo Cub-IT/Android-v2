@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.feature_auth.R
-import com.example.feature_auth.presentation.common.composable.UndefinedOutlinedTextField
+import com.example.core.presentation.composable.UndefinedOutlinedTextField
 import com.example.feature_auth.presentation.sign_up.SignUpUiEvent
 import com.example.feature_auth.presentation.sign_up.SignUpUiState
 import com.example.feature_auth.presentation.sign_up.SignUpViewModel

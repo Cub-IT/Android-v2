@@ -17,4 +17,7 @@
     <string name="password_error_lowercase">Password should have at least one lowercase letter</string>
     <string name="password_error_number">Password should have at least one number letter</string>
     <string name="password_error_prohibited">Password should not contain: \" \' . ,</string>
+    <string name="short_code">Code is too short</string>
+    <string name="long_code">Code is too long</string>
+    <string name="invalid_code_format">Invalid code format</string>
 </resources>
