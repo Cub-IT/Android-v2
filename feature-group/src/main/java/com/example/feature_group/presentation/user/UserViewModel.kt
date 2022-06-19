@@ -35,6 +35,7 @@ class UserViewModel @AssistedInject constructor(
                 userItem = userSource.getUser()
                     ?: throw IllegalStateException("User is authorized but user's id is ${userSource.getUser()?.id}")
             )
+            updateUserData()
         }
 
         return UserUiState.UpdatingUserItem(
