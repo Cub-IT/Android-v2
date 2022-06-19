@@ -3,6 +3,8 @@ package com.example.feature_group.presentation.group_list
 import androidx.lifecycle.viewModelScope
 import com.example.core.presentation.BaseViewModel
 import com.example.core.util.exhaustive
+import com.example.core.util.result
+import com.example.feature_group.data.repository.GroupRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -11,7 +13,8 @@ import kotlinx.coroutines.launch
 
 class GroupListViewModel @AssistedInject constructor(
     @Assisted private val onGroupClicked: (GroupId: String) -> Unit,
-    @Assisted private val onUserAvatarClicked: () -> Unit
+    @Assisted private val onUserAvatarClicked: () -> Unit,
+    private val groupRepository: GroupRepository
 ) : BaseViewModel<GroupListUiEvent, GroupListUiState>() {
 
     @AssistedFactory
@@ -70,48 +73,15 @@ class GroupListViewModel @AssistedInject constructor(
 
     private fun loadGroups() {
         viewModelScope.launch {
-            delay(2000)
-            /*_uiState.value = GroupListUiState.GroupsFetched(
-                groups = listOf(
-                    GroupItem(
-                        name = "Group name 1",
-                        description = "Here is a description",
-                        ownerName = "Teacher Name 1",
-                        coverColor = Color(0xFF0277BD)
-                    ),
-                    GroupItem(
-                        name = "Group name 2",
-                        description = "Here is a description",
-                        ownerName = "Teacher Name 2",
-                        coverColor = Color(0xFF3B79E8)
-                    ),
-                    GroupItem(
-                        name = "Group name 3",
-                        description = "Here is a description",
-                        ownerName = "Teacher Name 3",
-                        coverColor = Color(0xFF32AC71)
-                    ),
-                    GroupItem(
-                        name = "Group name 4",
-                        description = "Here is a description",
-                        ownerName = "Teacher Name 4",
-                        coverColor = Color(0xFF566E7A)
-                    ),
-                    GroupItem(
-                        name = "Group name 5",
-                        description = "Here is a description",
-                        ownerName = "Teacher Name 5",
-                        coverColor = Color(0xFFD91A60)
-                    ),
-                    GroupItem(
-                        name = "Group name 6",
-                        description = "Here is a description",
-                        ownerName = "Teacher Name 6",
-                        coverColor = Color(0xFF02579A)
+            delay(10) // TODO: fix:  here I need to make a delay before using groupRepository (that I injected). If I don't then it crashes
+            groupRepository.getUserGroups().result(
+                onSuccess = { _uiState.value = GroupListUiState.GroupsFetched(it.value) },
+                onFailure = {
+                    _uiState.value = GroupListUiState.ErrorLoadingGroups(
+                        cause = it.error.localizedMessage
                     )
-                )
-            )*/
-            _uiState.value = GroupListUiState.ErrorLoadingGroups(cause = IllegalArgumentException().localizedMessage)
+                }
+            )
         }
     }
 

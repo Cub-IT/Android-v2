@@ -2,7 +2,7 @@ package com.example.cubit.di
 
 import com.example.core.data.local.UserSource
 import com.example.core.data.remote.ResultAdapterFactory
-import com.example.core.util.API_URL
+import com.example.core.util.EXTENDED_API_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,15 +21,14 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(userSource: UserSource): Retrofit {
-        val baseUrl = API_URL
-            .plus("api/v1/user/")
-            .apply {
-                if (userSource.isAuthorized()) {
-                    val userId = userSource.getUser()?.id
-                        ?: throw IllegalStateException("User is authorized but user's id is ${userSource.getUser()?.id}")
-                    plus("$userId/")
-                }
+        val baseUrl = when (userSource.isAuthorized()) {
+            true -> {
+                val userId = userSource.getUser()?.id
+                    ?: throw IllegalStateException("User is authorized but user's id is ${userSource.getUser()?.id}")
+                EXTENDED_API_URL.plus("$userId/")
             }
+            false -> EXTENDED_API_URL
+        }
         return createRetrofit(baseUrl).build()
     }
 

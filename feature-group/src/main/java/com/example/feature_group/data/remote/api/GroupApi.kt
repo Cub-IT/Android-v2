@@ -6,7 +6,7 @@ import retrofit2.http.GET
 
 interface GroupApi {
 
-    @GET("/api/v1/user/:userId/groups")
+    @GET("groups")
     suspend fun getUserGroups(): Result<GetUserGroupsResponse, Exception>
 
 }
