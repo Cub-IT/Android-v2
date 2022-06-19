@@ -12,6 +12,8 @@ import com.example.feature_group.presentation.group.GroupScreen
 import com.example.feature_group.presentation.group.GroupViewModel
 import com.example.feature_group.presentation.group_list.GroupListScreen
 import com.example.feature_group.presentation.group_list.GroupListViewModel
+import com.example.feature_group.presentation.user.UserScreen
+import com.example.feature_group.presentation.user.UserViewModel
 
 class Navigator (
     private val navController: NavHostController
@@ -45,6 +47,8 @@ class Navigator (
                 object GroupList : Screen.Group(route = "groupList")
 
                 data class Group(val groupId: String) : Screen.Group(route = "group?groupId=$groupId")
+
+                object User : Screen(route = "user")
             }
         }
     }
@@ -81,6 +85,13 @@ class Navigator (
                     ?: throw IllegalStateException()
                 //navigationFlow = null
                 GroupScreen(viewModel = vm)
+            }
+
+            composable(route = NavTarget.Screen.Group.User.route) {
+                val vm = navigationFlow?.getViewModel(modelClass = UserViewModel::class.java)
+                    ?: throw IllegalStateException()
+                //navigationFlow = null
+                UserScreen(viewModel = vm)
             }
         }
     }

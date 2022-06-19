@@ -17,7 +17,7 @@ class  SignInNavigationFlow(
     private val navigator: Navigator
 ) : NavigationFlow {
 
-    // injecting userSource
+    // injecting ViewModels
     @EntryPoint
     @InstallIn(ActivityComponent::class)
     interface SignViewModelFactoryProviderEntryPoint {

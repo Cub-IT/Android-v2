@@ -1,5 +1,6 @@
 package com.example.cubit.navigation.flow
 
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import com.example.core.util.viewModelCreator
@@ -7,6 +8,7 @@ import com.example.cubit.navigation.navigator.NavigationFlow
 import com.example.cubit.navigation.navigator.Navigator
 import com.example.feature_group.presentation.group.GroupViewModel
 import com.example.feature_group.presentation.group_list.GroupListViewModel
+import com.example.feature_group.presentation.user.UserViewModel
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -17,12 +19,13 @@ class GroupNavigationFlow constructor(
     private val navigator: Navigator
 ) : NavigationFlow {
 
-    // injecting userSource
+    // injecting ViewModels
     @EntryPoint
     @InstallIn(ActivityComponent::class)
     interface GroupNavigationFlowProviderEntryPoint {
         fun groupListViewModelFactory(): GroupListViewModel.Factory
         fun groupViewModelFactory(): GroupViewModel.Factory
+        fun userViewModelFactory(): UserViewModel.Factory
     }
 
     private lateinit var exit: () -> Unit
@@ -47,7 +50,13 @@ class GroupNavigationFlow constructor(
                     navigationFlow = this
                 )
             },
-            onUserAvatarClicked = { /* TODO: implement user profile screen */ }
+            onUserAvatarClicked = {
+                Log.d("TAG", "onGroupListScreen: Avatar clicked!!!")
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Screen.Group.User,
+                    navigationFlow = this
+                )
+            }
         )
     }
 
@@ -59,7 +68,24 @@ class GroupNavigationFlow constructor(
                     navigationFlow = this
                 )
             },
-            onUserAvatarClicked = { /* TODO: implement user profile screen */ }
+            onUserAvatarClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Screen.Group.User,
+                    navigationFlow = this
+                )
+            }
+        )
+    }
+
+    private fun onUserScreen(): UserViewModel {
+        return groupNavigationFlowProviderEntryPoint.userViewModelFactory().create(
+            onBackClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Back,
+                    navigationFlow = this
+                )
+            },
+            onLogoutClicked = { exit() }
         )
     }
 
@@ -67,6 +93,7 @@ class GroupNavigationFlow constructor(
         return when (modelClass) {
             GroupListViewModel::class.java -> activity.viewModelCreator { onGroupListScreen() }.value
             GroupViewModel::class.java -> activity.viewModelCreator { onGroupScreen() }.value
+            UserViewModel::class.java -> activity.viewModelCreator { onUserScreen() }.value
 
             else -> throw IllegalArgumentException("No ViewModel registered for $modelClass")
         } as T
