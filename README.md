@@ -1,14 +1,24 @@
-# Android-v2
+# Android
 
-# Patterns
+This is an Android-part of the team project that I have in my university.
 
+# Patterns I used
+
+### Architectional
  - MVVM
  - MVI
- - Singleton
  - Navigation FLow
- - Observer
+ - Unidirectional Data Flow
+
+### Creational
+ - Singleton
  - Builder
+
+### Structural
  - Adapter
- - Undirectional Data Flow
  - Facade
+
+### Behavioral
+ - Observer
  - State
+ - Command
