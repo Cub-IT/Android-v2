@@ -3,19 +3,15 @@ package com.example.feature_group.presentation.group
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
 import com.example.core.presentation.BaseViewModel
+import com.example.core.util.readableCause
 import com.example.core.util.exhaustive
 import com.example.core.util.result
 import com.example.feature_group.data.repository.GroupRepository
 import com.example.feature_group.presentation.common.item.GroupItem
 import com.example.feature_group.presentation.group.item.PostItem
-import com.example.feature_group.presentation.group_list.GroupListUiEvent
-import com.example.feature_group.presentation.group_list.GroupListUiState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class GroupViewModel @AssistedInject constructor(
@@ -140,7 +136,7 @@ class GroupViewModel @AssistedInject constructor(
                     _uiState.value = GroupUiState.ErrorLoadingTasks(
                         group = currentState.group,
                         posts = currentState.posts,
-                        cause = it.error.localizedMessage
+                        cause = it.error.readableCause()
                     )
                 }
             )

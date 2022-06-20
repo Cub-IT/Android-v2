@@ -2,6 +2,7 @@ package com.example.feature_auth.presentation.sign_in
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -19,39 +20,30 @@ fun SingInScreen(
 ) {
     val uiState by viewModel.uiState
 
-    when (uiState) {
-        is SignInUiState.FailedSignIn,
-        is SignInUiState.WaitingUserData -> {
-            Box(Modifier.fillMaxSize()) {
-                if (uiState is SignInUiState.FailedSignIn) {
-                    ErrorMessage(
-                        errorCause = (uiState as SignInUiState.FailedSignIn).cause,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-
-                Fields(
-                    uiState = uiState,
-                    viewModel = viewModel,
-                )
-
-                BottomButtons(
-                    positiveButtonText = stringResource(R.string.sign_in),
-                    onPositiveButtonClick = { viewModel.handleEvent(event = SignInUiEvent.SignIn) },
-                    negativeButtonText = stringResource(R.string.sign_up),
-                    onNegativeButtonClick = { viewModel.handleEvent(event = SignInUiEvent.NavigateToSignUp) },
-                    isPositiveButtonEnabled = uiState.isSignInEnabled,
-                    isNegativeButtonVisible = true,
-                )
-            }
+    Box(Modifier.fillMaxSize()) {
+        if (uiState is SignInUiState.WaitingResponse) {
+            CircularProgressIndicator(modifier = Modifier.padding(32.dp).align(Alignment.TopCenter))
         }
-        is SignInUiState.WaitingResponse -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
+
+        if (uiState is SignInUiState.FailedSignIn) {
+            ErrorMessage(
+                errorCause = (uiState as SignInUiState.FailedSignIn).cause,
+                modifier = Modifier.padding(16.dp)
+            )
         }
+
+        Fields(
+            uiState = uiState,
+            viewModel = viewModel,
+        )
+
+        BottomButtons(
+            positiveButtonText = stringResource(R.string.sign_in),
+            onPositiveButtonClick = { viewModel.handleEvent(event = SignInUiEvent.SignIn) },
+            negativeButtonText = stringResource(R.string.sign_up),
+            onNegativeButtonClick = { viewModel.handleEvent(event = SignInUiEvent.NavigateToSignUp) },
+            isPositiveButtonEnabled = uiState.isSignInEnabled,
+            isNegativeButtonVisible = true,
+        )
     }
 }

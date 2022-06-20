@@ -2,15 +2,13 @@ package com.example.feature_group.presentation.group_list
 
 import androidx.lifecycle.viewModelScope
 import com.example.core.presentation.BaseViewModel
+import com.example.core.util.readableCause
 import com.example.core.util.exhaustive
 import com.example.core.util.result
 import com.example.feature_group.data.repository.GroupRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class GroupListViewModel @AssistedInject constructor(
@@ -97,7 +95,7 @@ class GroupListViewModel @AssistedInject constructor(
                 onFailure = {
                     _uiState.value = GroupListUiState.ErrorLoadingGroups(
                         groups = uiState.value.groups,
-                        cause = it.error.localizedMessage
+                        cause = it.error.readableCause()
                     )
                 }
             )

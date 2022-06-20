@@ -4,10 +4,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.core.presentation.BaseViewModel
 import com.example.core.presentation.item.InputFiled
 import com.example.core.util.InputLinter
+import com.example.core.util.readableCause
 import com.example.core.util.exhaustive
 import com.example.core.util.result
 import com.example.feature_group.data.repository.GroupRepository
-import com.example.feature_group.presentation.add_group.AddGroupViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -87,7 +87,7 @@ class JoinGroupViewModel @AssistedInject constructor(
                     _uiState.value = JoinGroupUiState.FailedCreation(
                         groupCode = groupCode,
                         isJoiningEnabled = isJoiningEnabled(groupCode),
-                        cause = it.error.localizedMessage
+                        cause = it.error.readableCause()
                     )
                 }
             )

@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.core.presentation.BaseViewModel
 import com.example.core.presentation.item.InputFiled
 import com.example.core.util.InputLinter
+import com.example.core.util.readableCause
 import com.example.core.util.exhaustive
 import com.example.core.util.result
 import com.example.feature_group.data.repository.GroupRepository
@@ -120,7 +121,7 @@ class AddGroupViewModel @AssistedInject constructor(
                     _uiState.value = AddGroupUiState.FailedCreation(
                         group = group,
                         isCreationEnabled = isCreationEnabled(group),
-                        cause = it.error.localizedMessage
+                        cause = it.error.readableCause()
                     )
                 }
             )

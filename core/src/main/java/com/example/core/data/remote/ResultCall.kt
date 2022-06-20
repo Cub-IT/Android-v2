@@ -1,6 +1,7 @@
 package com.example.core.data.remote
 
 import com.example.core.util.Result
+import okio.IOException
 import okio.Timeout
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,13 +24,12 @@ internal class ResultCall<T>(proxy: Call<T>) : CallDelegate<T, Result<T, Excepti
     ) : Callback<T> {
 
         override fun onResponse(call: Call<T>, response: Response<T>) {
-            val result: Result<T, Exception>
-            if (response.isSuccessful) {
-                result = Result.Success(
+            val result: Result<T, Exception> = if (response.isSuccessful) {
+                Result.Success(
                     value = response.body() as T
                 )
             } else {
-                result = Result.Failure(
+                Result.Failure(
                     error = HttpException(response)
                 )
             }
@@ -37,7 +37,12 @@ internal class ResultCall<T>(proxy: Call<T>) : CallDelegate<T, Result<T, Excepti
         }
 
         override fun onFailure(call: Call<T>, error: Throwable) {
-            val result = Result.Failure(error = Exception(error))
+            val result = when (error) {
+                is HttpException -> Result.Failure(error = error)
+                is IOException -> Result.Failure(error = error)
+
+                else -> Result.Failure(error = Exception(null, error))
+            }
             callback.onResponse(proxy, Response.success(result))
         }
     }

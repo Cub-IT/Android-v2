@@ -14,6 +14,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.core.presentation.composable.ErrorMessage
 import com.example.feature_auth.R
 import com.example.feature_auth.presentation.common.composable.BottomButtons
+import com.example.feature_auth.presentation.sign_in.SignInUiEvent
+import com.example.feature_auth.presentation.sign_in.SignInUiState
 import com.example.feature_auth.presentation.sign_up.composable.Fields
 
 @Composable
@@ -22,39 +24,30 @@ fun SingUpScreen(
 ) {
     val uiState by viewModel.uiState
 
-    when (uiState) {
-        is SignUpUiState.FailedSignUp,
-        is SignUpUiState.WaitingUserData -> {
-            Box(Modifier.fillMaxSize()) {
-                if (uiState is SignUpUiState.FailedSignUp) {
-                    ErrorMessage(
-                        errorCause = (uiState as SignUpUiState.FailedSignUp).cause,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-
-                Fields(
-                    uiState = uiState,
-                    viewModel = viewModel,
-                )
-
-                BottomButtons(
-                    positiveButtonText = stringResource(R.string.sign_up),
-                    onPositiveButtonClick = { viewModel.handleEvent(event = SignUpUiEvent.SignUp) },
-                    negativeButtonText = stringResource(R.string.cancel),
-                    onNegativeButtonClick = { viewModel.handleEvent(event = SignUpUiEvent.NavigateToSignIn) },
-                    isPositiveButtonEnabled = uiState.isSignUpEnabled,
-                    isNegativeButtonVisible = true,
-                )
-            }
+    Box(Modifier.fillMaxSize()) {
+        if (uiState is SignUpUiState.WaitingResponse) {
+            CircularProgressIndicator(modifier = Modifier.padding(32.dp).align(Alignment.TopCenter))
         }
-        is SignUpUiState.WaitingResponse -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
+
+        if (uiState is SignUpUiState.FailedSignUp) {
+            ErrorMessage(
+                errorCause = (uiState as SignUpUiState.FailedSignUp).cause,
+                modifier = Modifier.padding(16.dp)
+            )
         }
+
+        Fields(
+            uiState = uiState,
+            viewModel = viewModel,
+        )
+
+        BottomButtons(
+            positiveButtonText = stringResource(R.string.sign_up),
+            onPositiveButtonClick = { viewModel.handleEvent(event = SignUpUiEvent.SignUp) },
+            negativeButtonText = stringResource(R.string.cancel),
+            onNegativeButtonClick = { viewModel.handleEvent(event = SignUpUiEvent.NavigateToSignIn) },
+            isPositiveButtonEnabled = uiState.isSignUpEnabled,
+            isNegativeButtonVisible = true,
+        )
     }
 }

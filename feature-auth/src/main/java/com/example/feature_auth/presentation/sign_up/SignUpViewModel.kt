@@ -2,11 +2,12 @@ package com.example.feature_auth.presentation.sign_up
 
 import androidx.lifecycle.viewModelScope
 import com.example.core.presentation.BaseViewModel
+import com.example.core.presentation.item.InputFiled
 import com.example.core.util.InputLinter
+import com.example.core.util.readableCause
 import com.example.core.util.exhaustive
 import com.example.core.util.result
 import com.example.feature_auth.data.repository.AuthRepository
-import com.example.core.presentation.item.InputFiled
 import com.example.feature_auth.presentation.sign_up.item.UserRegistrationItem
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -46,9 +47,20 @@ class SignUpViewModel @AssistedInject constructor(
 
     override fun handleEvent(event: SignUpUiEvent) {
         when (val currentState = uiState.value) {
-            is SignUpUiState.WaitingResponse -> throw IllegalStateException()
+            is SignUpUiState.WaitingResponse -> reduce(event, currentState)
             is SignUpUiState.WaitingUserData -> reduce(event, currentState)
             is SignUpUiState.FailedSignUp -> reduce(event, currentState)
+        }.exhaustive
+    }
+
+    private fun reduce(event: SignUpUiEvent, currentState: SignUpUiState.WaitingResponse) {
+        when (event) {
+            is SignUpUiEvent.SignUp -> signUp(user = currentState.user)
+            is SignUpUiEvent.NavigateToSignIn -> onSignInClicked()
+            is SignUpUiEvent.UpdateUserFirstName -> { }
+            is SignUpUiEvent.UpdateUserLastName -> { }
+            is SignUpUiEvent.UpdateUserEmail ->  { }
+            is SignUpUiEvent.UpdateUserPassword -> { }
         }.exhaustive
     }
 
@@ -181,6 +193,7 @@ class SignUpViewModel @AssistedInject constructor(
     }
 
     private fun signUp(user: UserRegistrationItem) {
+        _uiState.value = SignUpUiState.WaitingResponse(user = user)
         viewModelScope.launch {
             authRepository.signUp(
                 firstName = user.firstName.value,
@@ -192,7 +205,7 @@ class SignUpViewModel @AssistedInject constructor(
                 onFailure = {
                     _uiState.value = SignUpUiState.FailedSignUp(
                         user = user,
-                        cause = it.error.localizedMessage,
+                        cause = it.error.readableCause(),
                         isSignUpEnabled(user)
                     )
                 }

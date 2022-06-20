@@ -45,10 +45,10 @@ class GroupRepository @Inject constructor(
     }
 
     suspend fun updateUserGroups(): Result<Unit, Exception> {
-        /*val groups = groupService.getUserGroups()
-            .onFailure { return it }*/
+        val groups = groupService.getUserGroups()
+            .onFailure { return it }
 
-        val groups = listOf(
+        /*val groups = listOf(
             GetUserGroupsResponseItem(
                 id = "1",
                 title = "Title 1",
@@ -103,7 +103,7 @@ class GroupRepository @Inject constructor(
                 ownerFirstName = "Mar",
                 ownerLastName = "Yav"
             ),
-        )
+        )*/
 
         groupDao.deleteUserGroups()
         groupDao.insertUserGroups(groups)
@@ -120,7 +120,7 @@ class GroupRepository @Inject constructor(
     }
 
     suspend fun updateGroupPosts(groupId: String): Result<Unit, Exception> {
-        /*val posts = postService.getGroupPosts()
+        val posts = postService.getGroupPosts()
             .onFailure { return it }
             .map {
                 PostEntity(
@@ -130,9 +130,9 @@ class GroupRepository @Inject constructor(
                     editDate = it.editDate,
                     description = it.description
                 )
-            }*/
+            }
 
-        val posts = listOf(
+        /*val posts = listOf(
             PostEntity(
                 id = "1",
                 groupId = groupId,
@@ -176,7 +176,7 @@ class GroupRepository @Inject constructor(
                 description = "Description"
             ),
 
-        )
+        )*/
 
         postDao.deleteGroupPosts()
         postDao.insertGroupPosts(posts)

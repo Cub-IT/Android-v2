@@ -21,9 +21,9 @@ fun Fields(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .padding(16.dp)
+            .absolutePadding(top = 128.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // user first name TextField
         UndefinedOutlinedTextField(

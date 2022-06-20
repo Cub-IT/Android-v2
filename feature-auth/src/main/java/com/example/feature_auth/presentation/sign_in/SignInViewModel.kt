@@ -7,6 +7,7 @@ import com.example.core.util.exhaustive
 import com.example.core.util.result
 import com.example.feature_auth.data.repository.AuthRepository
 import com.example.core.presentation.item.InputFiled
+import com.example.core.util.readableCause
 import com.example.feature_auth.presentation.sign_in.item.UserSignInItem
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -41,7 +42,7 @@ class SignInViewModel @AssistedInject constructor(
     override fun handleEvent(event: SignInUiEvent) {
         when (val currentState = _uiState.value) {
             is SignInUiState.FailedSignIn -> reduce(event, currentState)
-            is SignInUiState.WaitingResponse -> throw IllegalStateException()
+            is SignInUiState.WaitingResponse -> reduce(event, currentState)
             is SignInUiState.WaitingUserData -> reduce(event, currentState)
         }.exhaustive
     }
@@ -72,6 +73,15 @@ class SignInViewModel @AssistedInject constructor(
                     isSignInEnabled = isSignInEnabled(userInput)
                 )
             }
+        }.exhaustive
+    }
+
+    private fun reduce(event: SignInUiEvent, currentState: SignInUiState.WaitingResponse) {
+        when (event) {
+            is SignInUiEvent.SignIn -> signIn(user = currentState.user)
+            is SignInUiEvent.NavigateToSignUp -> onSignUpClicked()
+            is SignInUiEvent.UpdateUserEmail -> { }
+            is SignInUiEvent.UpdateUserPassword -> { }
         }.exhaustive
     }
 
@@ -111,6 +121,7 @@ class SignInViewModel @AssistedInject constructor(
     }
 
     private fun signIn(user: UserSignInItem) {
+        _uiState.value = SignInUiState.WaitingResponse(user = user)
         viewModelScope.launch {
             authRepository.signIn(
                 email = user.email.value.trim(),
@@ -120,7 +131,7 @@ class SignInViewModel @AssistedInject constructor(
                 onFailure = {
                     _uiState.value = SignInUiState.FailedSignIn(
                         user = user,
-                        cause = it.error.localizedMessage,
+                        cause = it.error.readableCause(),
                         isSignInEnabled = isSignInEnabled(user)
                     )
                 }
