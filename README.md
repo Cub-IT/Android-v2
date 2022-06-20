@@ -8,6 +8,7 @@ This is an Android-part of the team project that I have in my university.
  - MVVM
  - MVI
  - Navigation FLow
+ - Single Source of Truth
  - Unidirectional Data Flow
 
 ### Creational
