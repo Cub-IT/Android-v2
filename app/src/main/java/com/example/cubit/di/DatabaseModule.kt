@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.room.Room
 import com.example.feature_group.data.local.GroupDao
 import com.example.feature_group.data.local.GroupDatabase
+import com.example.feature_group.data.local.PostDao
+import com.example.feature_group.data.local.PostDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,6 +34,26 @@ object DatabaseModule {
         groupDatabase: GroupDatabase
     ): GroupDao {
         return groupDatabase.dao
+    }
+
+    @Provides
+    @Singleton
+    fun providePostDatabase(
+        app: Application
+    ): PostDatabase {
+        return Room.databaseBuilder(
+            app,
+            PostDatabase::class.java,
+            "post_database"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun providePostDao(
+        postDatabase: PostDatabase
+    ): PostDao {
+        return postDatabase.dao
     }
 
 }
