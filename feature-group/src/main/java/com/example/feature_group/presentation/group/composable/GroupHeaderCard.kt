@@ -52,7 +52,7 @@ fun GroupHeaderCard(
     }
 }
 
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun GroupHeaderCardPreview() {
     GroupHeaderCard(
@@ -64,4 +64,4 @@ fun GroupHeaderCardPreview() {
         ),
         modifier = Modifier.padding(8.dp)
     )
-}
+}*/

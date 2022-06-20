@@ -2,6 +2,7 @@ package com.example.feature_group.presentation.group_list.composable
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,6 +24,15 @@ fun GroupList(
     modifier: Modifier = Modifier,
     onGroupClick: (groupId: String) -> Unit
 ) {
+    if (groups.isEmpty()) {
+        Text(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            text = stringResource(R.string.no_groups),
+            style = Typography.headlineSmall,
+            textAlign = TextAlign.Center
+        )
+    }
+
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
@@ -35,16 +45,9 @@ fun GroupList(
             )
         }
     }
-
-    if (groups.isEmpty()) {
-        Text(
-            text = stringResource(R.string.no_groups),
-            style = Typography.headlineSmall,
-            textAlign = TextAlign.Center
-        )
-    }
 }
 
+/*
 @Preview(backgroundColor = 1)
 @Composable
 fun GroupListPreview() {
@@ -95,4 +98,4 @@ fun GroupListPreview() {
         ),
         onGroupClick = {}
     )
-}
+}*/

@@ -1,6 +1,7 @@
 package com.example.feature_group.presentation.group
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -44,13 +45,16 @@ fun GroupScreen(
             )
         }
     ) {
-        Column(modifier = Modifier.padding(it)) {
+        Column(modifier = Modifier.padding(it).fillMaxSize()) {
             if (uiState is GroupUiState.Loading) {
                 LinearProgressIndicator()
             }
 
             if (uiState is GroupUiState.ErrorLoadingTasks) {
-                ErrorMessage(errorCause = (uiState as GroupUiState.ErrorLoadingTasks).cause)
+                ErrorMessage(
+                    errorCause = (uiState as GroupUiState.ErrorLoadingTasks).cause,
+                    modifier = Modifier.padding(16.dp)
+                )
             }
 
             TaskList(

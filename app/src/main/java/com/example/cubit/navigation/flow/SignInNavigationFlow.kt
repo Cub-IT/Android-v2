@@ -60,7 +60,7 @@ class  SignInNavigationFlow(
         )
     }
 
-    override fun <T : ViewModel> getViewModel(modelClass: Class<T>): T? {
+    override fun <T : ViewModel> getViewModel(modelClass: Class<T>, args: Any?): T? {
         return when (modelClass.name) {
             SignInViewModel::class.java.name -> activity.viewModelCreator { onSignInScreen() }.value
             SignUpViewModel::class.java.name -> activity.viewModelCreator { onSignUpScreen() }.value

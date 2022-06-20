@@ -50,9 +50,15 @@ object InputLinterModule {
     @Singleton
     @Named("groupCodeLinter")
     fun provideGroupCodeLinter() = InputLinter()
-        .addRule(errorMessage = R.string.invalid_code_format) {input -> input.consistsOfDigits() }
-        .addRule(errorMessage = R.string.short_code) { input -> input.isNotEmpty() }
-        .addRule(errorMessage = R.string.long_code) { input -> input.length < 10 }
+        .addRule(errorMessage = R.string.invalid_code_format) { input -> input.all { it.isLetterOrDigit() } }
+        .addRule(errorMessage = R.string.invalid_code_long) { input -> input.length == 10 }
+
+    @Provides
+    @Singleton
+    @Named("postContentLinter")
+    fun providePostContentLinter() = InputLinter()
+        .addRule(errorMessage = R.string.short_content) { input -> input.isNotEmpty() }
+        .addRule(errorMessage = R.string.long_content) { input -> input.length < 255 }
 
     private fun String.hasDigit() = this.any { it.isDigit() }
 

@@ -5,19 +5,19 @@ import com.example.core.data.local.UserSource
 import com.example.core.presentation.BaseViewModel
 import com.example.core.presentation.item.UserItem
 import com.example.core.util.exhaustive
+import com.example.feature_group.data.repository.GroupRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Named
 
 class UserViewModel @AssistedInject constructor(
     @Assisted("back") private val onBackClicked: () -> Unit,
     @Assisted("logout") private val onLogoutClicked: () -> Unit,
-    private val userSource: UserSource
+    private val userSource: UserSource,
+    private val groupRepository: GroupRepository
 ) : BaseViewModel<UserUiEvent, UserUiState>() {
 
     @AssistedFactory
@@ -54,10 +54,11 @@ class UserViewModel @AssistedInject constructor(
         when (event) {
             UserUiEvent.BackClicked -> onBackClicked()
             UserUiEvent.UpdateUserData -> { /* nothing to do */ }
-            UserUiEvent.LogoutClicked -> {
-                userSource.deleteUser()
+            UserUiEvent.LogoutClicked -> viewModelScope.launch {
+                groupRepository.logout()
                 onLogoutClicked()
             }
+
         }.exhaustive
     }
 
@@ -65,8 +66,8 @@ class UserViewModel @AssistedInject constructor(
         when (event) {
             UserUiEvent.BackClicked -> onBackClicked()
             UserUiEvent.UpdateUserData -> updateUserData()
-            UserUiEvent.LogoutClicked -> {
-                userSource.deleteUser()
+            UserUiEvent.LogoutClicked -> viewModelScope.launch {
+                groupRepository.logout()
                 onLogoutClicked()
             }
         }.exhaustive

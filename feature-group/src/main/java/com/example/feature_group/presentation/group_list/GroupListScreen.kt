@@ -63,34 +63,24 @@ fun GroupListScreen(
             }
         }
     ) {
-        when (uiState) {
-            is GroupListUiState.ErrorLoadingGroups -> {
+        Column(modifier = Modifier.padding(it).fillMaxSize()) {
+            if (uiState is GroupListUiState.LoadingGroups) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+
+            if (uiState is GroupListUiState.ErrorLoadingGroups) {
                 ErrorMessage(
                     errorCause = (uiState as GroupListUiState.ErrorLoadingGroups).cause,
-                    modifier = Modifier
-                        .padding(it)
-                        .padding(16.dp)
+                    modifier = Modifier.padding(16.dp)
                 )
             }
-            is GroupListUiState.GroupsFetched -> {
-                GroupList(
-                    groups = (uiState as GroupListUiState.GroupsFetched).groups,
-                    modifier = Modifier.padding(it),
-                    onGroupClick = { groupId ->
-                        viewModel.handleEvent(event = GroupListUiEvent.OpenGroup(groupId))
-                    }
-                )
-            }
-            is GroupListUiState.LoadingGroups -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(it),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
+
+            GroupList(
+                groups = uiState.groups,
+                onGroupClick = { groupId ->
+                    viewModel.handleEvent(event = GroupListUiEvent.OpenGroup(groupId))
                 }
-            }
+            )
         }
     }
 
