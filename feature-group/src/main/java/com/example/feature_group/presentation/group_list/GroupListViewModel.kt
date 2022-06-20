@@ -8,7 +8,8 @@ import com.example.feature_group.data.repository.GroupRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class GroupListViewModel @AssistedInject constructor(
@@ -30,8 +31,13 @@ class GroupListViewModel @AssistedInject constructor(
     }
 
     override fun createInitialState(): GroupListUiState {
-        loadGroups()
         return GroupListUiState.LoadingGroups(emptyList())
+    }
+
+    init {
+        groupRepository.getUserGroups().onEach {
+            _uiState.value = GroupListUiState.GroupsFetched(it)
+        }.launchIn(viewModelScope)
     }
 
     override fun handleEvent(event: GroupListUiEvent) {
@@ -46,10 +52,7 @@ class GroupListViewModel @AssistedInject constructor(
         when (event) {
             is GroupListUiEvent.AddGroupClicked -> onAddGroupClicked()
             is GroupListUiEvent.JoinGroupClicked -> onJoinGroupClicked()
-            is GroupListUiEvent.LoadGroups -> {
-                _uiState.value = GroupListUiState.LoadingGroups(groups = emptyList())
-                loadGroups()
-            }
+            is GroupListUiEvent.LoadGroups -> updateGroups()
             is GroupListUiEvent.OpenGroup -> throw IllegalStateException()
             is GroupListUiEvent.UserAvatarClicked -> onUserAvatarClicked()
         }
@@ -59,10 +62,7 @@ class GroupListViewModel @AssistedInject constructor(
         when (event) {
             is GroupListUiEvent.AddGroupClicked -> onAddGroupClicked()
             is GroupListUiEvent.JoinGroupClicked -> onJoinGroupClicked()
-            is GroupListUiEvent.LoadGroups -> {
-                _uiState.value = GroupListUiState.LoadingGroups(groups = currentState.groups)
-                loadGroups()
-            }
+            is GroupListUiEvent.LoadGroups -> updateGroups()
             is GroupListUiEvent.OpenGroup -> onGroupClicked(event.groupId)
             is GroupListUiEvent.UserAvatarClicked -> onUserAvatarClicked()
         }
@@ -78,13 +78,14 @@ class GroupListViewModel @AssistedInject constructor(
         }
     }
 
-    private fun loadGroups() {
+    private fun updateGroups() {
         viewModelScope.launch {
-            delay(10) // TODO: fix:  here I need to make a delay before using groupRepository (that I injected). If I don't then it crashes
-            groupRepository.getUserGroups().result(
-                onSuccess = { _uiState.value = GroupListUiState.GroupsFetched(it.value) },
+            _uiState.value = GroupListUiState.LoadingGroups(groups = uiState.value.groups)
+            groupRepository.updateUserGroups().result(
+                onSuccess = { /* state will be updated using flow */ },
                 onFailure = {
                     _uiState.value = GroupListUiState.ErrorLoadingGroups(
+                        groups = uiState.value.groups,
                         cause = it.error.localizedMessage
                     )
                 }

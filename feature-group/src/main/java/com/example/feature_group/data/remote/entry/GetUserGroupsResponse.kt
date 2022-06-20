@@ -8,10 +8,10 @@ class GetUserGroupsResponse : ArrayList<GetUserGroupsResponseItem>()
 fun GetUserGroupsResponse.toGroupItemList(): List<GroupItem> {
     return this.map { groupResponseItem ->
         GroupItem(
-            name = groupResponseItem.name,
+            name = groupResponseItem.title,
             description = groupResponseItem.description,
             ownerName = "${groupResponseItem.ownerFirstName} ${groupResponseItem.ownerLastName}",
-            coverColor = Color(android.graphics.Color.parseColor(groupResponseItem.coverColor))
+            coverColor = Color.Magenta//Color(android.graphics.Color.parseColor(groupResponseItem.coverColor)) //TODO: set real color
         )
     }
 }

@@ -3,12 +3,12 @@ package com.example.feature_group.presentation.group_list
 import com.example.core.presentation.UiState
 import com.example.feature_group.presentation.common.item.GroupItem
 
-sealed class GroupListUiState : UiState() {
+sealed class GroupListUiState(val groups: List<GroupItem>) : UiState() {
 
-    data class LoadingGroups(val groups: List<GroupItem>) : GroupListUiState()
+    class LoadingGroups(groups: List<GroupItem>) : GroupListUiState(groups = groups)
 
-    data class GroupsFetched(val groups: List<GroupItem>) : GroupListUiState()
+    class GroupsFetched(groups: List<GroupItem>) : GroupListUiState(groups = groups)
 
-    data class ErrorLoadingGroups(val cause: String?) : GroupListUiState()
+    class ErrorLoadingGroups(groups: List<GroupItem>, val cause: String?) : GroupListUiState(groups = groups)
 
 }

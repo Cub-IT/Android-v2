@@ -8,6 +8,7 @@ buildscript {
         dataStoreVersion = "1.0.0"
         dagger_version = '2.42'
         hiltAndroidXVersion = '1.0.0-alpha03'
+        room_version = "2.4.2"
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {

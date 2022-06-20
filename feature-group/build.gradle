@@ -75,4 +75,10 @@ dependencies {
     //implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hiltAndroidXVersion" https://github.com/google/dagger/issues/3257
     kapt "androidx.hilt:hilt-compiler:$hiltAndroidXVersion"
     implementation "androidx.hilt:hilt-navigation-compose:$hiltAndroidXVersion"
+
+    // Room
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+
 }
