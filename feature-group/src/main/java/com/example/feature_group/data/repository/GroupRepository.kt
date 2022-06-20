@@ -1,5 +1,6 @@
 package com.example.feature_group.data.repository
 
+import com.example.core.data.local.UserSource
 import com.example.core.util.Result
 import com.example.core.util.onFailure
 import com.example.feature_group.data.local.GroupDao
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 class GroupRepository @Inject constructor(
     private val groupService: GroupService,
-    private val dao: GroupDao
+    private val dao: GroupDao,
+    private val userSource: UserSource
 ) {
 
     fun getUserGroups(): Flow<List<GroupItem>> {
@@ -49,6 +51,11 @@ class GroupRepository @Inject constructor(
 
     suspend fun createPost(content: String): Result<Unit, Exception> {
         TODO()
+    }
+
+    suspend fun logout() {
+        userSource.deleteUser()
+        dao.deleteUserGroups()
     }
 
 }
