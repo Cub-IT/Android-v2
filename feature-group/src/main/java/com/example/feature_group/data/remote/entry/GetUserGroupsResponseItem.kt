@@ -8,7 +8,7 @@ import com.example.feature_group.presentation.common.item.GroupItem
 @Entity
 data class GetUserGroupsResponseItem(
     @PrimaryKey
-    val id: Int,
+    val id: String,
     val title: String,
     val description: String,
     val code: String,
@@ -39,6 +39,7 @@ data class GroupEntity(
 
 fun GetUserGroupsResponseItem.toGroupItem(): GroupItem {
     return GroupItem(
+        id = this.id,
         name = this.title,
         description = this.description,
         ownerName = "${this.ownerFirstName} ${this.ownerLastName}",

@@ -47,6 +47,7 @@ fun GroupList(
     }
 }
 
+/*
 @Preview(backgroundColor = 1)
 @Composable
 fun GroupListPreview() {
@@ -97,4 +98,4 @@ fun GroupListPreview() {
         ),
         onGroupClick = {}
     )
-}
+}*/

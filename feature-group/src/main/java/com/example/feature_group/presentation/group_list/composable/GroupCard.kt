@@ -65,7 +65,7 @@ fun GroupCard(
     }
 }
 
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun GroupCardPreview() {
     GroupCard(
@@ -78,4 +78,4 @@ fun GroupCardPreview() {
         onClick = {},
         modifier = Modifier.padding(8.dp)
     )
-}
+}*/

@@ -77,7 +77,7 @@ class GroupNavigationFlow constructor(
         )
     }
 
-    private fun onGroupScreen(): GroupViewModel {
+    private fun onGroupScreen(groupId: Int): GroupViewModel {
         return groupNavigationFlowProviderEntryPoint.groupViewModelFactory().create(
             onBackClicked = {
                 navigator.navigateTo(
@@ -90,7 +90,8 @@ class GroupNavigationFlow constructor(
                     navTarget = Navigator.NavTarget.Screen.Group.User,
                     navigationFlow = this
                 )
-            }
+            },
+            groupId = groupId
         )
     }
 
@@ -157,10 +158,10 @@ class GroupNavigationFlow constructor(
         )
     }
 
-    override fun <T : ViewModel> getViewModel(modelClass: Class<T>): T? {
+    override fun <T : ViewModel> getViewModel(modelClass: Class<T>, args: Any?): T? {
         return when (modelClass) {
             GroupListViewModel::class.java -> activity.viewModelCreator { onGroupListScreen() }.value
-            GroupViewModel::class.java -> activity.viewModelCreator { onGroupScreen() }.value
+            GroupViewModel::class.java -> activity.viewModelCreator { onGroupScreen(groupId = (args as Int)) }.value
             UserViewModel::class.java -> activity.viewModelCreator { onUserScreen() }.value
             AddGroupViewModel::class.java -> activity.viewModelCreator { onAddGroupScreen() }.value
             JoinGroupViewModel::class.java -> activity.viewModelCreator { onJoinGroupScreen() }.value

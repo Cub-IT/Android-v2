@@ -5,18 +5,18 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.feature_group.presentation.group.item.PostItem
 
-@Entity
 data class GetGroupPostsResponseItem (
-    @PrimaryKey
     val id: String,
-    val content: String
+    val creationDate: String,
+    val editDate: String,
+    val description: String
 )
 
-fun GetGroupPostsResponseItem.toPostItem(): PostItem {
+/*fun GetGroupPostsResponseItem.toPostItem(): PostItem {
     return PostItem(
         creatorName = "Creator name",
         creatorColor = Color.Magenta,
-        creationDate = "creation date",
-        content = this.content,
+        creationDate = this.creationDate,
+        content = this.description,
     )
-}
+}*/

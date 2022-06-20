@@ -4,19 +4,19 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.feature_group.data.remote.entry.GetGroupPostsResponseItem
+import com.example.feature_group.data.local.entity.PostEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PostDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUserGroups(data: List<GetGroupPostsResponseItem>)
+    suspend fun insertGroupPosts(data: List<PostEntity>)
 
-    @Query("SELECT * FROM getgrouppostsresponseitem")
-    fun getUserGroups(): Flow<List<GetGroupPostsResponseItem>>
+    @Query("SELECT * FROM postentity WHERE groupId = :groupId")
+    fun getGroupPosts(groupId: String): Flow<List<PostEntity>>
 
-    @Query("DELETE FROM getgrouppostsresponseitem")
-    suspend fun deleteUserGroups()
+    @Query("DELETE FROM postentity")
+    suspend fun deleteGroupPosts()
 
 }

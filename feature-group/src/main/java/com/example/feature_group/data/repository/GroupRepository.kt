@@ -5,12 +5,11 @@ import com.example.core.util.Result
 import com.example.core.util.onFailure
 import com.example.feature_group.data.local.GroupDao
 import com.example.feature_group.data.local.PostDao
+import com.example.feature_group.data.local.entity.PostEntity
 import com.example.feature_group.data.remote.api.GroupService
 import com.example.feature_group.data.remote.api.PostService
 import com.example.feature_group.data.remote.entry.toGroupItem
-import com.example.feature_group.data.remote.entry.toPostItem
 import com.example.feature_group.presentation.common.item.GroupItem
-import com.example.feature_group.presentation.group.item.PostItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.transformLatest
@@ -31,6 +30,10 @@ class GroupRepository @Inject constructor(
         }
     }
 
+    fun getUserGroup(groupId: Int): Flow<GroupItem> {
+        return groupDao.getUserGroup(groupId = groupId).transformLatest { it.toGroupItem() }
+    }
+
     suspend fun updateUserGroups(): Result<Unit, Exception> {
         val groups = groupService.getUserGroups()
             .onFailure { return it }
@@ -41,18 +44,25 @@ class GroupRepository @Inject constructor(
         return Result.Success(Unit)
     }
 
-    fun getGroupPosts(groupId: String): Flow<List<PostItem>> {
-        return postDao.getUserGroups().transformLatest { postList ->
-            postList.map { it.toPostItem() }
-        }
+    fun getGroupPosts(groupId: String): Flow<List<PostEntity>> {
+        return postDao.getGroupPosts(groupId = groupId)
     }
 
     suspend fun updateGroupPosts(groupId: String): Result<Unit, Exception> {
         val posts = postService.getGroupPosts()
             .onFailure { return it }
+            .map {
+                PostEntity(
+                    id = it.id,
+                    groupId = groupId,
+                    creationDate = it.creationDate,
+                    editDate = it.editDate,
+                    description = it.description
+                )
+            }
 
-        postDao.deleteUserGroups()
-        postDao.insertUserGroups(posts)
+        postDao.deleteGroupPosts()
+        postDao.insertGroupPosts(posts)
 
         return Result.Success(Unit)
     }

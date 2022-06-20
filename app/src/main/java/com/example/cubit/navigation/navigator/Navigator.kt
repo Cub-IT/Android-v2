@@ -6,8 +6,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.feature_auth.presentation.sign_in.SignInViewModel
 import com.example.feature_auth.presentation.sign_in.SingInScreen
 import com.example.feature_auth.presentation.sign_up.SignUpViewModel
@@ -103,8 +105,12 @@ class Navigator (
                 GroupListScreen(viewModel = vm)
             }
 
-            composable(route = NavTarget.Screen.Group.Group(groupId = "{groupId}").route) {
-                val vm = navigationFlow?.getViewModel(modelClass = GroupViewModel::class.java)
+            composable(
+                route = NavTarget.Screen.Group.Group(groupId = "{groupId}").route,
+                arguments = listOf(navArgument("groupId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val groupId = backStackEntry.arguments?.getString("groupId")?.toInt() ?: throw IllegalArgumentException()
+                val vm = navigationFlow?.getViewModel(modelClass = GroupViewModel::class.java, groupId)
                     ?: previousNavigationFLow?.getViewModel(modelClass = GroupViewModel::class.java) // TODO: get rid of it
                     ?: throw IllegalStateException()
                 //navigationFlow = null
