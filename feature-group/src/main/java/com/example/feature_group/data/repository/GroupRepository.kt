@@ -68,11 +68,11 @@ class GroupRepository @Inject constructor(
     }
 
     suspend fun createGroup(name: String, description: String): Result<Unit, Exception> {
-        TODO()
+        return groupService.createGroup(title = name, description = description)
     }
 
     suspend fun joinToGroup(groupId: String): Result<Unit, Exception> {
-        TODO()
+        return groupService.joinGroup(groupCode = groupId)
     }
 
     suspend fun createPost(content: String): Result<Unit, Exception> {

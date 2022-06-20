@@ -9,13 +9,9 @@ import com.example.feature_group.data.repository.GroupRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Named
 
 class UserViewModel @AssistedInject constructor(
     @Assisted("back") private val onBackClicked: () -> Unit,
@@ -58,10 +54,11 @@ class UserViewModel @AssistedInject constructor(
         when (event) {
             UserUiEvent.BackClicked -> onBackClicked()
             UserUiEvent.UpdateUserData -> { /* nothing to do */ }
-            UserUiEvent.LogoutClicked -> {
-                GlobalScope.launch { groupRepository.logout() }
+            UserUiEvent.LogoutClicked -> viewModelScope.launch {
+                groupRepository.logout()
                 onLogoutClicked()
             }
+
         }.exhaustive
     }
 
@@ -69,8 +66,8 @@ class UserViewModel @AssistedInject constructor(
         when (event) {
             UserUiEvent.BackClicked -> onBackClicked()
             UserUiEvent.UpdateUserData -> updateUserData()
-            UserUiEvent.LogoutClicked -> {
-                GlobalScope.launch { groupRepository.logout() }
+            UserUiEvent.LogoutClicked -> viewModelScope.launch {
+                groupRepository.logout()
                 onLogoutClicked()
             }
         }.exhaustive

@@ -72,7 +72,7 @@ class GroupListViewModel @AssistedInject constructor(
         when (event) {
             is GroupListUiEvent.AddGroupClicked -> onAddGroupClicked()
             is GroupListUiEvent.JoinGroupClicked -> onJoinGroupClicked()
-            is GroupListUiEvent.LoadGroups -> { }
+            is GroupListUiEvent.LoadGroups -> updateGroups()
             is GroupListUiEvent.OpenGroup -> throw IllegalStateException()
             is GroupListUiEvent.UserAvatarClicked -> onUserAvatarClicked()
         }
