@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 class GroupViewModel @AssistedInject constructor(
     @Assisted("back") private val onBackClicked: () -> Unit,
     @Assisted("userAvatar") private val onUserAvatarClicked: () -> Unit,
-    @Assisted private val groupId: Int,
+    @Assisted private val groupId: String,
     private val groupRepository: GroupRepository
 ) : BaseViewModel<GroupUiEvent, GroupUiState>() {
 
@@ -30,14 +30,14 @@ class GroupViewModel @AssistedInject constructor(
         fun create(
             @Assisted("back") onBackClicked: () -> Unit,
             @Assisted("userAvatar") onUserAvatarClicked: () -> Unit,
-            @Assisted groupId: Int
+            @Assisted groupId: String
         ): GroupViewModel
     }
 
     override fun createInitialState(): GroupUiState {
         return GroupUiState.Loading(
             group = GroupItem(
-                id = groupId.toString(),
+                id = groupId,
                 name = "",
                 description = "",
                 ownerName = "",
@@ -48,9 +48,24 @@ class GroupViewModel @AssistedInject constructor(
     }
 
     init {
-        combine(
+        viewModelScope.launch {
+            groupRepository.updateGroupPosts(groupId = groupId)
+            val group = groupRepository.getUserGroupSuspend(groupId = groupId)
+            _uiState.value = GroupUiState.TasksFetched(
+                group = group,
+                posts = groupRepository.getGroupPostsSuspend(groupId = groupId).map {
+                    PostItem(
+                        creatorName = group.ownerName,
+                        creatorColor = Color(0xFF3B79E8),
+                        creationDate = it.creationDate,
+                        content = it.description
+                    )
+                }
+            )
+        }
+        /*combine(
             groupRepository.getUserGroup(groupId = groupId),
-            groupRepository.getGroupPosts(groupId = groupId.toString())
+            groupRepository.getGroupPosts(groupId = groupId)
         ) { group, posts ->
             Pair(group, posts)
         }.onEach {
@@ -65,7 +80,7 @@ class GroupViewModel @AssistedInject constructor(
                     )
                 }
             )
-        }.launchIn(viewModelScope)
+        }.launchIn(viewModelScope)*/
     }
 
     override fun handleEvent(event: GroupUiEvent) {
@@ -107,7 +122,20 @@ class GroupViewModel @AssistedInject constructor(
                 posts = currentState.posts
             )
             groupRepository.updateGroupPosts(groupId = currentState.group.id).result(
-                onSuccess = { /* state will be updated using flow */ },
+                onSuccess = { /* state will be updated using flow */
+                    val group = groupRepository.getUserGroupSuspend(groupId = groupId)
+                    _uiState.value = GroupUiState.TasksFetched(
+                        group = group,
+                        posts = groupRepository.getGroupPostsSuspend(groupId = groupId).map {
+                            PostItem(
+                                creatorName = group.ownerName,
+                                creatorColor = Color(0xFF3B79E8),
+                                creationDate = it.creationDate,
+                                content = it.description
+                            )
+                        }
+                    )
+                },
                 onFailure = {
                     _uiState.value = GroupUiState.ErrorLoadingTasks(
                         group = currentState.group,

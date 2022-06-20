@@ -62,7 +62,7 @@ class Navigator (
             sealed class Group(route: String) : Screen(route = route) {
                 object GroupList : Screen.Group(route = "groupList")
 
-                data class Group(val groupId: String) : Screen.Group(route = "group?groupId=$groupId")
+                data class Group(val groupId: String) : Screen.Group(route = "group/$groupId")
 
                 object User : Screen(route = "user")
 
@@ -107,9 +107,9 @@ class Navigator (
 
             composable(
                 route = NavTarget.Screen.Group.Group(groupId = "{groupId}").route,
-                arguments = listOf(navArgument("groupId") { type = NavType.IntType })
+                arguments = listOf(navArgument("groupId") { type = NavType.StringType })
             ) { backStackEntry ->
-                val groupId = backStackEntry.arguments?.getString("groupId")?.toInt() ?: throw IllegalArgumentException()
+                val groupId = backStackEntry.arguments?.getString("groupId") ?: throw IllegalArgumentException()
                 val vm = navigationFlow?.getViewModel(modelClass = GroupViewModel::class.java, groupId)
                     ?: previousNavigationFLow?.getViewModel(modelClass = GroupViewModel::class.java) // TODO: get rid of it
                     ?: throw IllegalStateException()

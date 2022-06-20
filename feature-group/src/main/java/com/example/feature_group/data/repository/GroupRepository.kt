@@ -8,10 +8,12 @@ import com.example.feature_group.data.local.PostDao
 import com.example.feature_group.data.local.entity.PostEntity
 import com.example.feature_group.data.remote.api.GroupService
 import com.example.feature_group.data.remote.api.PostService
+import com.example.feature_group.data.remote.entry.GetUserGroupsResponseItem
 import com.example.feature_group.data.remote.entry.toGroupItem
 import com.example.feature_group.presentation.common.item.GroupItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transformLatest
 import javax.inject.Inject
 
@@ -30,13 +32,78 @@ class GroupRepository @Inject constructor(
         }
     }
 
-    fun getUserGroup(groupId: Int): Flow<GroupItem> {
+    suspend fun getUserGroupsSuspend(): List<GroupItem> {
+        return groupDao.getUserGroupsSuspend().map { it.toGroupItem() }
+    }
+
+    fun getUserGroup(groupId: String): Flow<GroupItem> {
         return groupDao.getUserGroup(groupId = groupId).transformLatest { it.toGroupItem() }
     }
 
+    suspend fun getUserGroupSuspend(groupId: String): GroupItem {
+        return groupDao.getUserGroupSuspend(groupId = groupId).toGroupItem()
+    }
+
     suspend fun updateUserGroups(): Result<Unit, Exception> {
-        val groups = groupService.getUserGroups()
-            .onFailure { return it }
+        /*val groups = groupService.getUserGroups()
+            .onFailure { return it }*/
+
+        val groups = listOf(
+            GetUserGroupsResponseItem(
+                id = "1",
+                title = "Title 1",
+                description = "Description 1",
+                code = "ABCD56789e",
+                creationDate = "20.06.2022",
+                ownerFirstName = "Mar",
+                ownerLastName = "Yav"
+            ),
+            GetUserGroupsResponseItem(
+                id = "2",
+                title = "Title 2",
+                description = "Description 2",
+                code = "ABCD56789e",
+                creationDate = "20.06.2022",
+                ownerFirstName = "Mar",
+                ownerLastName = "Yav"
+            ),
+            GetUserGroupsResponseItem(
+                id = "3",
+                title = "Title 3",
+                description = "Description 3",
+                code = "ABCD56789e",
+                creationDate = "20.06.2022",
+                ownerFirstName = "Mar",
+                ownerLastName = "Yav"
+            ),
+            GetUserGroupsResponseItem(
+                id = "4",
+                title = "Title 4",
+                description = "Description 4",
+                code = "ABCD56789e",
+                creationDate = "20.06.2022",
+                ownerFirstName = "Mar",
+                ownerLastName = "Yav"
+            ),
+            GetUserGroupsResponseItem(
+                id = "5",
+                title = "Title 5",
+                description = "Description 5",
+                code = "ABCD56789e",
+                creationDate = "20.06.2022",
+                ownerFirstName = "Mar",
+                ownerLastName = "Yav"
+            ),
+            GetUserGroupsResponseItem(
+                id = "6",
+                title = "Title 6",
+                description = "Description 6",
+                code = "ABCD56789e",
+                creationDate = "20.06.2022",
+                ownerFirstName = "Mar",
+                ownerLastName = "Yav"
+            ),
+        )
 
         groupDao.deleteUserGroups()
         groupDao.insertUserGroups(groups)
@@ -48,8 +115,12 @@ class GroupRepository @Inject constructor(
         return postDao.getGroupPosts(groupId = groupId)
     }
 
+    suspend fun getGroupPostsSuspend(groupId: String): List<PostEntity> {
+        return postDao.getGroupPostsSuspend(groupId = groupId)
+    }
+
     suspend fun updateGroupPosts(groupId: String): Result<Unit, Exception> {
-        val posts = postService.getGroupPosts()
+        /*val posts = postService.getGroupPosts()
             .onFailure { return it }
             .map {
                 PostEntity(
@@ -59,7 +130,53 @@ class GroupRepository @Inject constructor(
                     editDate = it.editDate,
                     description = it.description
                 )
-            }
+            }*/
+
+        val posts = listOf(
+            PostEntity(
+                id = "1",
+                groupId = groupId,
+                creationDate = "20.06.2022",
+                editDate = "20.06.2022",
+                description = "Description"
+            ),
+            PostEntity(
+                id = "2",
+                groupId = groupId,
+                creationDate = "20.06.2022",
+                editDate = "20.06.2022",
+                description = "Description"
+            ),
+            PostEntity(
+                id = "3",
+                groupId = groupId,
+                creationDate = "20.06.2022",
+                editDate = "20.06.2022",
+                description = "Description"
+            ),
+            PostEntity(
+                id = "4",
+                groupId = groupId,
+                creationDate = "20.06.2022",
+                editDate = "20.06.2022",
+                description = "Description"
+            ),
+            PostEntity(
+                id = "5",
+                groupId = groupId,
+                creationDate = "20.06.2022",
+                editDate = "20.06.2022",
+                description = "Description"
+            ),
+            PostEntity(
+                id = "6",
+                groupId = groupId,
+                creationDate = "20.06.2022",
+                editDate = "20.06.2022",
+                description = "Description"
+            ),
+
+        )
 
         postDao.deleteGroupPosts()
         postDao.insertGroupPosts(posts)

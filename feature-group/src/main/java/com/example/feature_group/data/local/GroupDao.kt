@@ -17,8 +17,14 @@ interface GroupDao {
     @Query("SELECT * FROM getusergroupsresponseitem")
     fun getUserGroups(): Flow<List<GetUserGroupsResponseItem>>
 
+    @Query("SELECT * FROM getusergroupsresponseitem")
+    suspend fun getUserGroupsSuspend(): List<GetUserGroupsResponseItem>
+
     @Query("SELECT * FROM getusergroupsresponseitem WHERE id = :groupId")
-    fun getUserGroup(groupId: Int): Flow<GetUserGroupsResponseItem>
+    fun getUserGroup(groupId: String): Flow<GetUserGroupsResponseItem>
+
+    @Query("SELECT * FROM getusergroupsresponseitem WHERE id = :groupId")
+    suspend fun getUserGroupSuspend(groupId: String): GetUserGroupsResponseItem
 
     @Query("DELETE FROM getusergroupsresponseitem")
     suspend fun deleteUserGroups()

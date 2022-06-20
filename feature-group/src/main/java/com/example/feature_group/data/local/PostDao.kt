@@ -16,6 +16,9 @@ interface PostDao {
     @Query("SELECT * FROM postentity WHERE groupId = :groupId")
     fun getGroupPosts(groupId: String): Flow<List<PostEntity>>
 
+    @Query("SELECT * FROM postentity WHERE groupId = :groupId")
+    suspend fun getGroupPostsSuspend(groupId: String): List<PostEntity>
+
     @Query("DELETE FROM postentity")
     suspend fun deleteGroupPosts()
 

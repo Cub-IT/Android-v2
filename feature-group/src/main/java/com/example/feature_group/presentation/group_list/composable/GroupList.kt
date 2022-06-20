@@ -41,7 +41,7 @@ fun GroupList(
             GroupCard(
                 modifier = Modifier.padding(vertical = 4.dp),
                 group = group,
-                onClick = onGroupClick
+                onClick = { onGroupClick(group.id) }
             )
         }
     }
