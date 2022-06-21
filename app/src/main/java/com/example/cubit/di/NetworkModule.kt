@@ -7,18 +7,18 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
+import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
     @Provides
-    fun provideRetrofit(userSource: UserSource): Retrofit {
+    fun provideRetrofit(userSource: UserSource, okHttpClient: OkHttpClient): Retrofit {
         val baseUrl = when (userSource.isAuthorized()) {
             true -> {
                 val userId = userSource.getUser()?.id
@@ -27,23 +27,39 @@ object NetworkModule {
             }
             false -> EXTENDED_API_URL
         }
-        return createRetrofit(baseUrl).build()
+        return createRetrofit(baseUrl, okHttpClient).build()
     }
 
-    private fun createRetrofit(url: String) = Retrofit.Builder()
+    private fun createRetrofit(url: String, okHttpClient: OkHttpClient) = Retrofit.Builder()
         .baseUrl(url)
-        .client(createOkHttpClient())
+        .client(okHttpClient)
         .addCallAdapterFactory(ResultAdapterFactory())
         .addConverterFactory(GsonConverterFactory.create())
 
-    private fun createOkHttpClient(): OkHttpClient {
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(createLoggingInterceptor())
+            .cookieJar(UvCookieJar())
             .build()
     }
 
     private fun createLoggingInterceptor(): Interceptor {
         return HttpLoggingInterceptor()
             .setLevel(HttpLoggingInterceptor.Level.BODY)
+    }
+
+    private class UvCookieJar : CookieJar {
+
+        private val cookies = mutableListOf<Cookie>()
+        
+        override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
+            this.cookies.clear()
+            this.cookies.addAll(cookies)
+        }
+
+        override fun loadForRequest(url: HttpUrl): List<Cookie> =
+            cookies
     }
 }
