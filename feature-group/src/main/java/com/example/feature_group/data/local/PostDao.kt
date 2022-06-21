@@ -19,7 +19,7 @@ interface PostDao {
     @Query("SELECT * FROM postentity WHERE groupId = :groupId")
     suspend fun getGroupPostsSuspend(groupId: String): List<PostEntity>
 
-    @Query("DELETE FROM postentity")
-    suspend fun deleteGroupPosts()
+    @Query("DELETE FROM postentity WHERE groupId = :groupId")
+    suspend fun deleteGroupPosts(groupId: String)
 
 }

@@ -3,6 +3,7 @@ package com.example.feature_group.presentation.group.composable
 import android.graphics.Typeface
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
+import android.util.Log
 import android.widget.TextView
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,6 +29,7 @@ fun Task(
     task: PostItem,
     modifier: Modifier = Modifier
 ) {
+    Log.i("TAG", "Task: Redrawn!! item: ${task.content}")
     OutlinedCard(modifier = modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier

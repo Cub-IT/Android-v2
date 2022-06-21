@@ -1,6 +1,7 @@
 package com.example.feature_group.presentation.group
 
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.core.presentation.BaseViewModel
 import com.example.core.util.readableCause
@@ -12,12 +13,13 @@ import com.example.feature_group.presentation.group.item.PostItem
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class GroupViewModel @AssistedInject constructor(
     @Assisted("back") private val onBackClicked: () -> Unit,
     @Assisted("userAvatar") private val onUserAvatarClicked: () -> Unit,
-    @Assisted private val groupId: String,
+    @Assisted var groupId: String,
     private val groupRepository: GroupRepository
 ) : BaseViewModel<GroupUiEvent, GroupUiState>() {
 
@@ -37,92 +39,37 @@ class GroupViewModel @AssistedInject constructor(
                 name = "",
                 description = "",
                 ownerName = "",
-                coverColor = Color.Magenta
+                coverColor = Color(0xFF3B79E8)
             ),
             posts = emptyList()
         )
     }
 
-    init {
-        viewModelScope.launch {
-            groupRepository.updateGroupPosts(groupId = groupId)
-            val group = groupRepository.getUserGroupSuspend(groupId = groupId)
-            _uiState.value = GroupUiState.TasksFetched(
-                group = group,
-                posts = groupRepository.getGroupPostsSuspend(groupId = groupId).map {
-                    PostItem(
-                        creatorName = group.ownerName,
-                        creatorColor = Color(0xFF3B79E8),
-                        creationDate = it.creationDate,
-                        content = it.description
-                    )
-                }
-            )
-        }
-        /*combine(
-            groupRepository.getUserGroup(groupId = groupId),
-            groupRepository.getGroupPosts(groupId = groupId)
-        ) { group, posts ->
-            Pair(group, posts)
-        }.onEach {
-            _uiState.value = GroupUiState.TasksFetched(
-                group = it.first,
-                posts = it.second.map { postEntity ->
-                    PostItem(
-                        creatorName = it.first.ownerName,
-                        creatorColor = Color.Magenta,
-                        creationDate = postEntity.creationDate,
-                        content = postEntity.description
-                    )
-                }
-            )
-        }.launchIn(viewModelScope)*/
-    }
-
     override fun handleEvent(event: GroupUiEvent) {
-        when (val currentState = _uiState.value) {
-            is GroupUiState.ErrorLoadingTasks -> reduce(event, currentState)
-            is GroupUiState.Loading -> reduce(event, currentState)
-            is GroupUiState.TasksFetched -> reduce(event, currentState)
-        }.exhaustive
-    }
-
-    private fun reduce(event: GroupUiEvent, currentState: GroupUiState.ErrorLoadingTasks) {
         when (event) {
-            GroupUiEvent.LoadGroup -> updatePosts(currentState = currentState)
-            GroupUiEvent.BackClicked -> onBackClicked()
-            GroupUiEvent.UserAvatarClicked -> onUserAvatarClicked()
-        }.exhaustive
-    }
-
-    private fun reduce(event: GroupUiEvent, currentState: GroupUiState.Loading) {
-        when (event) {
-            GroupUiEvent.LoadGroup -> updatePosts(currentState = currentState)
-            GroupUiEvent.BackClicked -> onBackClicked()
-            GroupUiEvent.UserAvatarClicked -> onUserAvatarClicked()
-        }.exhaustive
-    }
-
-    private fun reduce(event: GroupUiEvent, currentState: GroupUiState.TasksFetched) {
-        when (event) {
-            GroupUiEvent.LoadGroup -> updatePosts(currentState = currentState)
-            GroupUiEvent.BackClicked -> onBackClicked()
+            GroupUiEvent.LoadGroup -> updatePosts(currentState = uiState.value)
+            GroupUiEvent.BackClicked -> {
+                _uiState.value = createInitialState()
+                onBackClicked()
+            }
             GroupUiEvent.UserAvatarClicked -> onUserAvatarClicked()
         }.exhaustive
     }
 
     private fun updatePosts(currentState: GroupUiState) {
+        val innerGroupId = groupId
         viewModelScope.launch {
             _uiState.value = GroupUiState.Loading(
                 group = currentState.group,
                 posts = currentState.posts
             )
-            groupRepository.updateGroupPosts(groupId = currentState.group.id).result(
+            groupRepository.updateGroupPosts(groupId = innerGroupId).result(
                 onSuccess = { /* state will be updated using flow */
-                    val group = groupRepository.getUserGroupSuspend(groupId = groupId)
+                    val group = groupRepository.getUserGroupSuspend(groupId = innerGroupId)
+                    val posts = groupRepository.getGroupPostsSuspend(groupId = innerGroupId).reversed()
                     _uiState.value = GroupUiState.TasksFetched(
                         group = group,
-                        posts = groupRepository.getGroupPostsSuspend(groupId = groupId).map {
+                        posts = posts.map {
                             PostItem(
                                 creatorName = group.ownerName,
                                 creatorColor = Color(0xFF3B79E8),

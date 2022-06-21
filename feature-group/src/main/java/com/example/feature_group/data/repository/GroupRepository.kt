@@ -120,8 +120,7 @@ class GroupRepository @Inject constructor(
     }
 
     suspend fun updateGroupPosts(groupId: String): Result<Unit, Exception> {
-        val postsR = postService.getGroupPosts(groupCode = groupId)
-        val posts = postsR
+        val posts = postService.getGroupPosts(groupCode = groupId)
             .onFailure { return it }
             .map {
                 PostEntity(
@@ -133,53 +132,7 @@ class GroupRepository @Inject constructor(
                 )
             }
 
-        /*val posts = listOf(
-            PostEntity(
-                id = "1",
-                groupId = groupId,
-                creationDate = "20.06.2022",
-                editDate = "20.06.2022",
-                description = "Description"
-            ),
-            PostEntity(
-                id = "2",
-                groupId = groupId,
-                creationDate = "20.06.2022",
-                editDate = "20.06.2022",
-                description = "Description"
-            ),
-            PostEntity(
-                id = "3",
-                groupId = groupId,
-                creationDate = "20.06.2022",
-                editDate = "20.06.2022",
-                description = "Description"
-            ),
-            PostEntity(
-                id = "4",
-                groupId = groupId,
-                creationDate = "20.06.2022",
-                editDate = "20.06.2022",
-                description = "Description"
-            ),
-            PostEntity(
-                id = "5",
-                groupId = groupId,
-                creationDate = "20.06.2022",
-                editDate = "20.06.2022",
-                description = "Description"
-            ),
-            PostEntity(
-                id = "6",
-                groupId = groupId,
-                creationDate = "20.06.2022",
-                editDate = "20.06.2022",
-                description = "Description"
-            ),
-
-        )*/
-
-        postDao.deleteGroupPosts()
+        postDao.deleteGroupPosts(groupId = groupId)
         postDao.insertGroupPosts(posts)
 
         return Result.Success(Unit)

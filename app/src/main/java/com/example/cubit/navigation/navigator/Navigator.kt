@@ -114,6 +114,7 @@ class Navigator (
                     ?: previousNavigationFLow?.getViewModel(modelClass = GroupViewModel::class.java) // TODO: get rid of it
                     ?: throw IllegalStateException()
                 //navigationFlow = null
+                vm.groupId = groupId
                 GroupScreen(viewModel = vm)
             }
 

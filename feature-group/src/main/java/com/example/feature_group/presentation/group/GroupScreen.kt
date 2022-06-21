@@ -1,10 +1,13 @@
 package com.example.feature_group.presentation.group
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,12 +25,13 @@ fun GroupScreen(
     viewModel: GroupViewModel
 ) {
     val uiState by viewModel.uiState
+    Log.i("TAG1", "GroupScreen: state: ${uiState.posts}")
 
     Scaffold(
         topBar = {
             SmallTopAppBar(
                 title = {
-                    Text(text = "Name of the group")
+                    Text(text = uiState.group.name)
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -42,13 +46,20 @@ fun GroupScreen(
                     }) {
                         IconAvatar(color = Color(0xFF3B79E8), size = 40.dp)
                     }
+                    IconButton(onClick = {
+                        viewModel.handleEvent(event = GroupUiEvent.LoadGroup)
+                    }) {
+                        Icon(imageVector = Icons.Default.Refresh, contentDescription = null)
+                    }
                 }
             )
         }
     ) {
-        Column(modifier = Modifier.padding(it).fillMaxSize()) {
+        Column(modifier = Modifier
+            .padding(it)
+            .fillMaxSize()) {
             if (uiState is GroupUiState.Loading) {
-                LinearProgressIndicator()
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
 
             if (uiState is GroupUiState.ErrorLoadingTasks) {
