@@ -17,6 +17,7 @@ import javax.inject.Named
 class AddPostViewModel @AssistedInject constructor(
     @Assisted("addPost") private val onPostClicked: () -> Unit,
     @Assisted("back") private val onBackClicked: () -> Unit,
+    @Assisted var groupId: String,
     private val groupRepository: GroupRepository,
     @Named("postContentLinter") private val postContentLinter: InputLinter
 ) : BaseViewModel<AddPostUiEvent, AddPostUiState>() {
@@ -25,7 +26,8 @@ class AddPostViewModel @AssistedInject constructor(
     interface Factory {
         fun create(
             @Assisted("addPost") onCreateClicked: () -> Unit,
-            @Assisted("back") onBackClicked: () -> Unit
+            @Assisted("back") onBackClicked: () -> Unit,
+            @Assisted groupId: String,
         ): AddPostViewModel
     }
 
@@ -81,7 +83,7 @@ class AddPostViewModel @AssistedInject constructor(
 
     private fun createNewPost(postContent: InputFiled) {
         viewModelScope.launch {
-            groupRepository.createPost(content = postContent.value).result(
+            groupRepository.createPost(groupCode = groupId, content = postContent.value).result(
                 onSuccess = { onPostClicked() },
                 onFailure = {
                     _uiState.value = AddPostUiState.FailedAddingPost(

@@ -7,39 +7,23 @@ import com.example.feature_group.presentation.common.item.GroupItem
 
 @Entity
 data class GetUserGroupsResponseItem(
+    val code: String,
+    val color: String,
+    val creationDate: String,
+    val description: String,
     @PrimaryKey
     val id: String,
-    val title: String,
-    val description: String,
-    val code: String,
-    val creationDate: String,
+    val ownerColor: String,
     val ownerFirstName: String,
-    val ownerLastName: String
-
-    /*val coverColor: String,
-    val description: String,
-    val groupId: String,
-    val name: String,
-    val ownerEmail: String,
-    val ownerFirstName: String,
-    val ownerLastName: String*/
-
-    /*@Entity
-data class GroupEntity(
-    @PrimaryKey
-    val id: Int,
-    val title: String,
-    val description: String,
-    val code: String,
-    val ownerName: String,
-    val coverColor: Color*
-)*/
-
+    val ownerId: String,
+    val ownerLastName: String,
+    val title: String
 )
 
 fun GetUserGroupsResponseItem.toGroupItem(): GroupItem {
     return GroupItem(
         id = this.id,
+        ownerId = this.ownerId,
         name = this.title,
         description = this.description,
         ownerName = "${this.ownerFirstName} ${this.ownerLastName}",

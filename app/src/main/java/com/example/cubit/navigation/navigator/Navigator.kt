@@ -70,7 +70,7 @@ class Navigator (
 
                 object JoinGroup : Screen.Group(route = "joinGroup")
 
-                object AddPost : Screen.Group(route = "addPost")
+                data class AddPost(val groupId: String) : Screen.Group(route = "addPost/$groupId")
             }
         }
     }
@@ -111,7 +111,7 @@ class Navigator (
             ) { backStackEntry ->
                 val groupId = backStackEntry.arguments?.getString("groupId") ?: throw IllegalArgumentException()
                 val vm = navigationFlow?.getViewModel(modelClass = GroupViewModel::class.java, groupId)
-                    ?: previousNavigationFLow?.getViewModel(modelClass = GroupViewModel::class.java) // TODO: get rid of it
+                    ?: previousNavigationFLow?.getViewModel(modelClass = GroupViewModel::class.java, groupId) // TODO: get rid of it
                     ?: throw IllegalStateException()
                 //navigationFlow = null
                 vm.groupId = groupId
@@ -142,10 +142,16 @@ class Navigator (
                 JoinGroupScreen(viewModel = vm)
             }
 
-            composable(route = NavTarget.Screen.Group.AddPost.route) {
-                val vm = navigationFlow?.getViewModel(modelClass = AddPostViewModel::class.java)
-                    ?: previousNavigationFLow?.getViewModel(modelClass = AddPostViewModel::class.java) // TODO: get rid of it
+            composable(
+                route = NavTarget.Screen.Group.AddPost(groupId = "{groupId}").route,
+                arguments = listOf(navArgument("groupId") { type = NavType.StringType })
+            ) {
+                    backStackEntry ->
+                val groupId = backStackEntry.arguments?.getString("groupId") ?: throw IllegalArgumentException()
+                val vm = navigationFlow?.getViewModel(modelClass = AddPostViewModel::class.java, groupId)
+                    ?: previousNavigationFLow?.getViewModel(modelClass = AddPostViewModel::class.java, groupId) // TODO: get rid of it
                     ?: throw IllegalStateException()
+                vm.groupId = groupId
                 //navigationFlow = null
                 AddPostScreen(viewModel = vm)
             }

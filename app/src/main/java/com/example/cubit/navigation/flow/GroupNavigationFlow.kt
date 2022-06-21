@@ -1,6 +1,5 @@
 package com.example.cubit.navigation.flow
 
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import com.example.core.util.viewModelCreator
@@ -91,6 +90,12 @@ class GroupNavigationFlow constructor(
                     navigationFlow = this
                 )
             },
+            onAddPostClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Screen.Group.AddPost(groupId = groupId),
+                    navigationFlow = this
+                )
+            },
             groupId = groupId
         )
     }
@@ -141,7 +146,7 @@ class GroupNavigationFlow constructor(
         )
     }
 
-    private fun onAddPostScreen(): AddPostViewModel {
+    private fun onAddPostScreen(groupId: String): AddPostViewModel {
         return groupNavigationFlowProviderEntryPoint.addPostViewModelFactory().create(
             onCreateClicked = {
                 navigator.navigateTo(
@@ -154,7 +159,8 @@ class GroupNavigationFlow constructor(
                     navTarget = Navigator.NavTarget.Back,
                     navigationFlow = this
                 )
-            }
+            },
+            groupId = groupId
         )
     }
 
@@ -165,7 +171,7 @@ class GroupNavigationFlow constructor(
             UserViewModel::class.java -> activity.viewModelCreator { onUserScreen() }.value
             AddGroupViewModel::class.java -> activity.viewModelCreator { onAddGroupScreen() }.value
             JoinGroupViewModel::class.java -> activity.viewModelCreator { onJoinGroupScreen() }.value
-            AddPostViewModel::class.java -> activity.viewModelCreator { onAddPostScreen() }.value
+            AddPostViewModel::class.java -> activity.viewModelCreator { onAddPostScreen(groupId = (args as String)) }.value
 
             //else -> throw IllegalArgumentException("No ViewModel registered for $modelClass")
             else -> null

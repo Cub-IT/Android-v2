@@ -64,7 +64,7 @@ fun AddPostScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text(text = "Asc your teacher for the group code, then enter it here.")
+                        Text(text = "Type the message you want to send here.")
                         UndefinedOutlinedTextField(
                             field = uiState.postContent,
                             label = R.string.post_content,

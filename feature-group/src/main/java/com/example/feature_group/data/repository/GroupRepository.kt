@@ -146,8 +146,8 @@ class GroupRepository @Inject constructor(
         return groupService.joinGroup(groupCode = groupId)
     }
 
-    suspend fun createPost(content: String): Result<Unit, Exception> {
-        TODO()
+    suspend fun createPost(groupCode: String, content: String): Result<Unit, Exception> {
+        return postService.createPost(groupCode = groupCode, description = content)
     }
 
     suspend fun logout() {

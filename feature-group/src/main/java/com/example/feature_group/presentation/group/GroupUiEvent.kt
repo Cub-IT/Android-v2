@@ -10,4 +10,6 @@ sealed class GroupUiEvent : UiEvent() {
 
     object BackClicked : GroupUiEvent()
 
+    object AddPostClicked : GroupUiEvent()
+
 }

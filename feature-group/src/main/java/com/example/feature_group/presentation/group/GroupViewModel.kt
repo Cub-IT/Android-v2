@@ -3,6 +3,7 @@ package com.example.feature_group.presentation.group
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.example.core.data.local.UserSource
 import com.example.core.presentation.BaseViewModel
 import com.example.core.util.readableCause
 import com.example.core.util.exhaustive
@@ -19,8 +20,10 @@ import kotlinx.coroutines.launch
 class GroupViewModel @AssistedInject constructor(
     @Assisted("back") private val onBackClicked: () -> Unit,
     @Assisted("userAvatar") private val onUserAvatarClicked: () -> Unit,
+    @Assisted("addPost") private val onAddPostClicked: () -> Unit,
     @Assisted var groupId: String,
-    private val groupRepository: GroupRepository
+    private val groupRepository: GroupRepository,
+    private val userSource: UserSource
 ) : BaseViewModel<GroupUiEvent, GroupUiState>() {
 
     @AssistedFactory
@@ -28,6 +31,7 @@ class GroupViewModel @AssistedInject constructor(
         fun create(
             @Assisted("back") onBackClicked: () -> Unit,
             @Assisted("userAvatar") onUserAvatarClicked: () -> Unit,
+            @Assisted("addPost") onAddPostClicked: () -> Unit,
             @Assisted groupId: String
         ): GroupViewModel
     }
@@ -36,12 +40,14 @@ class GroupViewModel @AssistedInject constructor(
         return GroupUiState.Loading(
             group = GroupItem(
                 id = groupId,
+                ownerId = "0",
                 name = "",
                 description = "",
                 ownerName = "",
                 coverColor = Color(0xFF3B79E8)
             ),
-            posts = emptyList()
+            posts = emptyList(),
+            isOwner = false
         )
     }
 
@@ -53,6 +59,7 @@ class GroupViewModel @AssistedInject constructor(
                 onBackClicked()
             }
             GroupUiEvent.UserAvatarClicked -> onUserAvatarClicked()
+            GroupUiEvent.AddPostClicked -> onAddPostClicked()
         }.exhaustive
     }
 
@@ -61,7 +68,8 @@ class GroupViewModel @AssistedInject constructor(
         viewModelScope.launch {
             _uiState.value = GroupUiState.Loading(
                 group = currentState.group,
-                posts = currentState.posts
+                posts = currentState.posts,
+                isOwner = userSource.getUser()!!.id == currentState.group.ownerId
             )
             groupRepository.updateGroupPosts(groupId = innerGroupId).result(
                 onSuccess = { /* state will be updated using flow */
@@ -76,13 +84,15 @@ class GroupViewModel @AssistedInject constructor(
                                 creationDate = it.creationDate,
                                 content = it.description
                             )
-                        }
+                        },
+                        isOwner = userSource.getUser()!!.id == group.ownerId
                     )
                 },
                 onFailure = {
                     _uiState.value = GroupUiState.ErrorLoadingTasks(
                         group = currentState.group,
                         posts = currentState.posts,
+                        isOwner = currentState.isOwner,
                         cause = it.error.readableCause()
                     )
                 }
