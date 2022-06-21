@@ -120,7 +120,8 @@ class GroupRepository @Inject constructor(
     }
 
     suspend fun updateGroupPosts(groupId: String): Result<Unit, Exception> {
-        val posts = postService.getGroupPosts()
+        val postsR = postService.getGroupPosts(groupCode = groupId)
+        val posts = postsR
             .onFailure { return it }
             .map {
                 PostEntity(

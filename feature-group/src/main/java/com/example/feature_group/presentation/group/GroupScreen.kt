@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,5 +63,9 @@ fun GroupScreen(
                 tasks = uiState.posts
             )
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.handleEvent(event = GroupUiEvent.LoadGroup)
     }
 }

@@ -6,9 +6,10 @@ import com.example.feature_auth.data.remote.entry.SignResponseEntry
 import com.example.feature_auth.data.remote.entry.SignUpRequestEntry
 import retrofit2.Retrofit
 import javax.inject.Inject
+import javax.inject.Named
 
 class AuthService @Inject constructor(
-    private val retrofit: Retrofit
+    @Named("authRetrofit") private val retrofit: Retrofit
 ) {
 
     private val authApi: AuthApi by lazy { retrofit.create(AuthApi::class.java) }

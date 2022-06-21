@@ -7,9 +7,10 @@ import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.Path
 import javax.inject.Inject
+import javax.inject.Named
 
 class GroupService @Inject constructor(
-    private val retrofit: Retrofit
+    @Named("groupRetrofit") private val retrofit: Retrofit
 ) {
 
     private val groupApi: GroupApi by lazy { retrofit.create(GroupApi::class.java) }
