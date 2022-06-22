@@ -17,7 +17,8 @@ import com.example.feature_group.presentation.group.item.PostItem
 fun TaskList(
     group: GroupItem,
     tasks: List<PostItem>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onEditClick: (postId: String) -> Unit
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -32,7 +33,8 @@ fun TaskList(
         items(tasks) { task ->
             Task(
                 task = task,
-                modifier = Modifier.padding(vertical = 4.dp)
+                modifier = Modifier.padding(vertical = 4.dp),
+                onEditClick = onEditClick
             )
         }
     }

@@ -7,6 +7,7 @@ data class GroupItem(
     val ownerId: String,
     val name: String,
     val description: String,
+    val code: String,
     val ownerName: String,
     val coverColor: Color
 )

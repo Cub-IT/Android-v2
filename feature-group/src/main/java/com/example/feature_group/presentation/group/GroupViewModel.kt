@@ -21,6 +21,7 @@ class GroupViewModel @AssistedInject constructor(
     @Assisted("back") private val onBackClicked: () -> Unit,
     @Assisted("userAvatar") private val onUserAvatarClicked: () -> Unit,
     @Assisted("addPost") private val onAddPostClicked: () -> Unit,
+    @Assisted("editPost") private val onEditPostClicked: (postId: String) -> Unit,
     @Assisted var groupId: String,
     private val groupRepository: GroupRepository,
     private val userSource: UserSource
@@ -32,6 +33,7 @@ class GroupViewModel @AssistedInject constructor(
             @Assisted("back") onBackClicked: () -> Unit,
             @Assisted("userAvatar") onUserAvatarClicked: () -> Unit,
             @Assisted("addPost") onAddPostClicked: () -> Unit,
+            @Assisted("editPost") onEditPostClicked: (postId: String) -> Unit,
             @Assisted groupId: String
         ): GroupViewModel
     }
@@ -43,6 +45,7 @@ class GroupViewModel @AssistedInject constructor(
                 ownerId = "0",
                 name = "",
                 description = "",
+                code = "",
                 ownerName = "",
                 coverColor = Color(0xFF3B79E8)
             ),
@@ -53,13 +56,14 @@ class GroupViewModel @AssistedInject constructor(
 
     override fun handleEvent(event: GroupUiEvent) {
         when (event) {
-            GroupUiEvent.LoadGroup -> updatePosts(currentState = uiState.value)
-            GroupUiEvent.BackClicked -> {
+            is GroupUiEvent.LoadGroup -> updatePosts(currentState = uiState.value)
+            is GroupUiEvent.BackClicked -> {
                 _uiState.value = createInitialState()
                 onBackClicked()
             }
-            GroupUiEvent.UserAvatarClicked -> onUserAvatarClicked()
-            GroupUiEvent.AddPostClicked -> onAddPostClicked()
+            is GroupUiEvent.UserAvatarClicked -> onUserAvatarClicked()
+            is GroupUiEvent.AddPostClicked -> onAddPostClicked()
+            is GroupUiEvent.EditPostClicked -> onEditPostClicked(event.postId)
         }.exhaustive
     }
 
@@ -79,10 +83,12 @@ class GroupViewModel @AssistedInject constructor(
                         group = group,
                         posts = posts.map {
                             PostItem(
+                                id = it.id,
                                 creatorName = group.ownerName,
                                 creatorColor = Color(0xFF3B79E8),
                                 creationDate = it.creationDate,
-                                content = it.description
+                                content = it.description,
+                                isModified = userSource.getUser()!!.id == group.ownerId
                             )
                         },
                         isOwner = userSource.getUser()!!.id == group.ownerId

@@ -150,6 +150,14 @@ class GroupRepository @Inject constructor(
         return postService.createPost(groupCode = groupCode, description = content)
     }
 
+    suspend fun updatePost(postId: String, content: String): Result<Unit, Exception> {
+        return postService.updatePost(taskId = postId, description = content)
+    }
+
+    suspend fun getPost(postId: String): PostEntity {
+        return postDao.getPost(postId = postId)
+    }
+
     suspend fun logout() {
         userSource.deleteUser()
         groupDao.deleteUserGroups()

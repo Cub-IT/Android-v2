@@ -12,4 +12,6 @@ sealed class GroupUiEvent : UiEvent() {
 
     object AddPostClicked : GroupUiEvent()
 
+    data class EditPostClicked(val postId: String) : GroupUiEvent()
+
 }

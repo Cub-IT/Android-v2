@@ -50,7 +50,7 @@ object NetworkModule {
     fun provideTaskRetrofit(userSource: UserSource, okHttpClient: OkHttpClient): Retrofit {
         val userId = userSource.getUser()?.id
             ?: throw IllegalStateException("User is authorized but user's id is ${userSource.getUser()?.id}")
-        val baseUrl = API_URL.plus("api/v1/task/new/group/")
+        val baseUrl = API_URL.plus("api/v1/task/")
         return createRetrofit(baseUrl, okHttpClient).build()
     }
 

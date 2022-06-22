@@ -26,6 +26,7 @@ fun GetUserGroupsResponseItem.toGroupItem(): GroupItem {
         ownerId = this.ownerId,
         name = this.title,
         description = this.description,
+        code = this.code,
         ownerName = "${this.ownerFirstName} ${this.ownerLastName}",
         coverColor = Color(0xFF3B79E8)//Color(android.graphics.Color.parseColor(groupResponseItem.coverColor)) //TODO: set real color
     )

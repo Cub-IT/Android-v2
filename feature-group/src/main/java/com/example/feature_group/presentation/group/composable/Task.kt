@@ -1,20 +1,17 @@
 package com.example.feature_group.presentation.group.composable
 
-import android.graphics.Typeface
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
 import android.util.Log
 import android.widget.TextView
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.toColorInt
@@ -27,7 +24,8 @@ import com.example.feature_group.presentation.group.item.PostItem
 @Composable
 fun Task(
     task: PostItem,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onEditClick: (postId: String) -> Unit
 ) {
     Log.i("TAG", "Task: Redrawn!! item: ${task.content}")
     OutlinedCard(modifier = modifier.fillMaxWidth()) {
@@ -56,6 +54,11 @@ fun Task(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+                if (task.isModified) {
+                    IconButton(onClick = { onEditClick(task.id) }) {
+                        Icon(imageVector = Icons.Default.Edit, contentDescription = null)
+                    }
+                }
             }
             Spacer(modifier = Modifier.height(16.dp))
             AndroidView(
@@ -75,6 +78,7 @@ fun Task(
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun TaskPreview() {
@@ -87,4 +91,4 @@ fun TaskPreview() {
         ),
         modifier = Modifier.padding(10.dp)
     )
-}
+}*/

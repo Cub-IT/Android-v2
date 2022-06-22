@@ -4,6 +4,8 @@ import com.example.core.util.Result
 import com.example.feature_group.data.remote.entry.CreatePostRequest
 import com.example.feature_group.data.remote.entry.GetGroupPostsResponse
 import retrofit2.Retrofit
+import retrofit2.http.Body
+import retrofit2.http.Path
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -24,6 +26,13 @@ class PostService @Inject constructor(
         description: String
     ): Result<Unit, Exception> {
         return taskApi.createPost(groupCode, CreatePostRequest(description))
+    }
+
+    suspend fun updatePost(
+        taskId: String,
+        description: String
+    ): Result<Unit, Exception> {
+        return taskApi.updatePost(taskId, CreatePostRequest(description))
     }
 
 }

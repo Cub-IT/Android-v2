@@ -18,6 +18,8 @@ import com.example.feature_group.presentation.add_group.AddGroupScreen
 import com.example.feature_group.presentation.add_group.AddGroupViewModel
 import com.example.feature_group.presentation.add_post.AddPostScreen
 import com.example.feature_group.presentation.add_post.AddPostViewModel
+import com.example.feature_group.presentation.edit_post.EditPostScreen
+import com.example.feature_group.presentation.edit_post.EditPostViewModel
 import com.example.feature_group.presentation.group.GroupScreen
 import com.example.feature_group.presentation.group.GroupViewModel
 import com.example.feature_group.presentation.group_list.GroupListScreen
@@ -71,6 +73,8 @@ class Navigator (
                 object JoinGroup : Screen.Group(route = "joinGroup")
 
                 data class AddPost(val groupId: String) : Screen.Group(route = "addPost/$groupId")
+
+                data class EditPost(val postId: String) : Screen.Group(route = "editPost/$postId")
             }
         }
     }
@@ -145,8 +149,7 @@ class Navigator (
             composable(
                 route = NavTarget.Screen.Group.AddPost(groupId = "{groupId}").route,
                 arguments = listOf(navArgument("groupId") { type = NavType.StringType })
-            ) {
-                    backStackEntry ->
+            ) { backStackEntry ->
                 val groupId = backStackEntry.arguments?.getString("groupId") ?: throw IllegalArgumentException()
                 val vm = navigationFlow?.getViewModel(modelClass = AddPostViewModel::class.java, groupId)
                     ?: previousNavigationFLow?.getViewModel(modelClass = AddPostViewModel::class.java, groupId) // TODO: get rid of it
@@ -154,6 +157,19 @@ class Navigator (
                 vm.groupId = groupId
                 //navigationFlow = null
                 AddPostScreen(viewModel = vm)
+            }
+
+            composable(
+                route = NavTarget.Screen.Group.EditPost(postId = "{postId}").route,
+                arguments = listOf(navArgument("postId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val postId = backStackEntry.arguments?.getString("postId") ?: throw IllegalArgumentException()
+                val vm = navigationFlow?.getViewModel(modelClass = EditPostViewModel::class.java, postId)
+                    ?: previousNavigationFLow?.getViewModel(modelClass = EditPostViewModel::class.java, postId) // TODO: get rid of it
+                    ?: throw IllegalStateException()
+                vm.postId = postId
+                //navigationFlow = null
+                EditPostScreen(viewModel = vm)
             }
         }
     }

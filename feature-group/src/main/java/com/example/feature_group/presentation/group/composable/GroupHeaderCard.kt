@@ -7,6 +7,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,6 +37,12 @@ fun GroupHeaderCard(
                 .padding(16.dp),
             verticalArrangement = Arrangement.Bottom
         ) {
+            Text(
+                text = group.code,
+                style = Typography.labelMedium,
+                maxLines = 1,
+                modifier = Modifier.align(Alignment.End)
+            )
             Text(
                 text = group.name,
                 style = Typography.titleLarge,

@@ -81,7 +81,10 @@ fun GroupScreen(
 
             TaskList(
                 group = uiState.group,
-                tasks = uiState.posts
+                tasks = uiState.posts,
+                onEditClick = { postId ->
+                    viewModel.handleEvent(event = GroupUiEvent.EditPostClicked(postId = postId))
+                }
             )
         }
     }

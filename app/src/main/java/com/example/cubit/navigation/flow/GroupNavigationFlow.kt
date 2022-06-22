@@ -7,6 +7,7 @@ import com.example.cubit.navigation.navigator.NavigationFlow
 import com.example.cubit.navigation.navigator.Navigator
 import com.example.feature_group.presentation.add_group.AddGroupViewModel
 import com.example.feature_group.presentation.add_post.AddPostViewModel
+import com.example.feature_group.presentation.edit_post.EditPostViewModel
 import com.example.feature_group.presentation.group.GroupViewModel
 import com.example.feature_group.presentation.group_list.GroupListViewModel
 import com.example.feature_group.presentation.join_group.JoinGroupViewModel
@@ -31,6 +32,7 @@ class GroupNavigationFlow constructor(
         fun addGroupViewModelFactory(): AddGroupViewModel.Factory
         fun joinGroupViewModelFactory(): JoinGroupViewModel.Factory
         fun addPostViewModelFactory(): AddPostViewModel.Factory
+        fun editPostViewModelFactory(): EditPostViewModel.Factory
     }
 
     private lateinit var exit: () -> Unit
@@ -93,6 +95,12 @@ class GroupNavigationFlow constructor(
             onAddPostClicked = {
                 navigator.navigateTo(
                     navTarget = Navigator.NavTarget.Screen.Group.AddPost(groupId = groupId),
+                    navigationFlow = this
+                )
+            },
+            onEditPostClicked = { postId ->
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Screen.Group.EditPost(postId = postId),
                     navigationFlow = this
                 )
             },
@@ -164,6 +172,24 @@ class GroupNavigationFlow constructor(
         )
     }
 
+    private fun onEditPostScreen(postId: String): EditPostViewModel {
+        return groupNavigationFlowProviderEntryPoint.editPostViewModelFactory().create(
+            onEditClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Back,
+                    navigationFlow = this
+                )
+            },
+            onBackClicked = {
+                navigator.navigateTo(
+                    navTarget = Navigator.NavTarget.Back,
+                    navigationFlow = this
+                )
+            },
+            postId = postId
+        )
+    }
+
     override fun <T : ViewModel> getViewModel(modelClass: Class<T>, args: Any?): T? {
         return when (modelClass) {
             GroupListViewModel::class.java -> activity.viewModelCreator { onGroupListScreen() }.value
@@ -172,6 +198,7 @@ class GroupNavigationFlow constructor(
             AddGroupViewModel::class.java -> activity.viewModelCreator { onAddGroupScreen() }.value
             JoinGroupViewModel::class.java -> activity.viewModelCreator { onJoinGroupScreen() }.value
             AddPostViewModel::class.java -> activity.viewModelCreator { onAddPostScreen(groupId = (args as String)) }.value
+            EditPostViewModel::class.java -> activity.viewModelCreator { onEditPostScreen(postId = (args as String)) }.value
 
             //else -> throw IllegalArgumentException("No ViewModel registered for $modelClass")
             else -> null
