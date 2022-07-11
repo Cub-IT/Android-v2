@@ -9,13 +9,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.feature_auth.R
 import com.example.core.presentation.composable.UndefinedOutlinedTextField
-import com.example.feature_auth.presentation.sign_in.SignInUiEvent
-import com.example.feature_auth.presentation.sign_in.SignInUiState
+import com.example.feature_auth.presentation.sign_in.mvi.SignInUiEvent
 import com.example.feature_auth.presentation.sign_in.SignInViewModel
+import com.example.feature_auth.presentation.sign_in.item.UserSignInItem
 
 @Composable
 fun Fields(
-    uiState: SignInUiState,
+    user: UserSignInItem,
     viewModel: SignInViewModel,
 ) {
     Column(
@@ -27,7 +27,7 @@ fun Fields(
     ) {
         // user email TextField
         UndefinedOutlinedTextField(
-            field = uiState.user.email,
+            field = user.email,
             label = R.string.user_email,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             onValueChange = { newValue ->
@@ -39,7 +39,7 @@ fun Fields(
 
         // user password TextField
         UndefinedOutlinedTextField(
-            field = uiState.user.password,
+            field = user.password,
             label = R.string.user_password,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             onValueChange = { newValue ->

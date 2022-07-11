@@ -14,8 +14,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.core.presentation.composable.ErrorMessage
 import com.example.feature_auth.R
 import com.example.feature_auth.presentation.common.composable.BottomButtons
-import com.example.feature_auth.presentation.sign_in.SignInUiEvent
-import com.example.feature_auth.presentation.sign_in.SignInUiState
 import com.example.feature_auth.presentation.sign_up.composable.Fields
 
 @Composable

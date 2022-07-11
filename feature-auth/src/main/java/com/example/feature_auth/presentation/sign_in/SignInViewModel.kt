@@ -3,12 +3,10 @@ package com.example.feature_auth.presentation.sign_in
 import androidx.lifecycle.viewModelScope
 import com.example.core.presentation.BaseViewModel
 import com.example.core.util.InputLinter
-import com.example.core.util.exhaustive
-import com.example.core.util.result
-import com.example.feature_auth.data.repository.AuthRepository
 import com.example.core.presentation.item.InputFiled
-import com.example.core.util.readableCause
+import com.example.core.presentation.item.Reloadable
 import com.example.feature_auth.presentation.sign_in.item.UserSignInItem
+import com.example.feature_auth.presentation.sign_in.mvi.*
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -18,7 +16,8 @@ import javax.inject.Named
 class SignInViewModel @AssistedInject constructor(
     @Assisted("signIn") private val onSignInClicked: () -> Unit,
     @Assisted("signUp") private val onSignUpClicked: () -> Unit,
-    private val authRepository: AuthRepository,
+    private val signInMiddleware: SignInMiddleware,
+    private val signInReducer: SignInReducer,
     @Named("emailLinter") private val emailLinter: InputLinter,
     @Named("passwordLinter") private val passwordLinter: InputLinter
 ) : BaseViewModel<SignInUiEvent, SignInUiState>() {
@@ -32,111 +31,43 @@ class SignInViewModel @AssistedInject constructor(
     }
 
     override fun createInitialState(): SignInUiState {
-        val user = UserSignInItem(email = InputFiled(""), password = InputFiled(""))
-        return SignInUiState.WaitingUserData(
-            user = user,
-            isSignInEnabled = isSignInEnabled(user)
-        )
+        return SignInUiState(user = Reloadable(
+            value = UserSignInItem(email = InputFiled(""), password = InputFiled("")),
+            status = Reloadable.Status.Idle
+        ))
     }
 
     override fun handleEvent(event: SignInUiEvent) {
-        when (val currentState = _uiState.value) {
-            is SignInUiState.FailedSignIn -> reduce(event, currentState)
-            is SignInUiState.WaitingResponse -> reduce(event, currentState)
-            is SignInUiState.WaitingUserData -> reduce(event, currentState)
-        }.exhaustive
-    }
-
-    private fun reduce(event: SignInUiEvent, currentState: SignInUiState.FailedSignIn) {
         when (event) {
-            is SignInUiEvent.SignIn -> signIn(user = currentState.user)
             is SignInUiEvent.NavigateToSignUp -> onSignUpClicked()
-            is SignInUiEvent.UpdateUserEmail -> {
-                val userInput = UserSignInItem(
-                    email = getNewEmail(event.email),
-                    password = currentState.user.password
-                )
-                _uiState.value = SignInUiState.FailedSignIn(
-                    user = userInput,
-                    cause = currentState.cause,
-                    isSignInEnabled = isSignInEnabled(userInput)
-                )
-            }
-            is SignInUiEvent.UpdateUserPassword -> {
-                val userInput = UserSignInItem(
-                    email = currentState.user.email,
-                    password = getNewPassword(event.password)
-                )
-                _uiState.value = SignInUiState.FailedSignIn(
-                    user = userInput,
-                    cause = currentState.cause,
-                    isSignInEnabled = isSignInEnabled(userInput)
-                )
-            }
-        }.exhaustive
-    }
-
-    private fun reduce(event: SignInUiEvent, currentState: SignInUiState.WaitingResponse) {
-        when (event) {
-            is SignInUiEvent.SignIn -> signIn(user = currentState.user)
-            is SignInUiEvent.NavigateToSignUp -> onSignUpClicked()
-            is SignInUiEvent.UpdateUserEmail -> { }
-            is SignInUiEvent.UpdateUserPassword -> { }
-        }.exhaustive
-    }
-
-    private fun reduce(event: SignInUiEvent, currentState: SignInUiState.WaitingUserData) {
-        when (event) {
-            is SignInUiEvent.SignIn -> signIn(user = currentState.user)
-            is SignInUiEvent.NavigateToSignUp -> onSignUpClicked()
-            is SignInUiEvent.UpdateUserEmail -> {
-                val userInput = UserSignInItem(
-                    email = getNewEmail(event.email),
-                    password = currentState.user.password
-                )
-                _uiState.value = SignInUiState.WaitingUserData(
-                    user = userInput,
-                    isSignInEnabled = isSignInEnabled(userInput)
-                )
-            }
-            is SignInUiEvent.UpdateUserPassword -> {
-                val userInput = UserSignInItem(
-                    email = currentState.user.email,
-                    password = getNewPassword(event.password)
-                )
-                _uiState.value = SignInUiState.WaitingUserData(
-                    user = userInput,
-                    isSignInEnabled = isSignInEnabled(userInput)
-                )
-            }
-        }.exhaustive
-    }
-
-    private fun isSignInEnabled(user: UserSignInItem): Boolean {
-        return (user.email.error == null) and
-                (user.email.value.isNotEmpty()) and
-
-                (user.password.error == null) and
-                (user.password.value.isNotEmpty())
-    }
-
-    private fun signIn(user: UserSignInItem) {
-        _uiState.value = SignInUiState.WaitingResponse(user = user)
-        viewModelScope.launch {
-            authRepository.signIn(
-                email = user.email.value.trim(),
-                password = user.password.value.trim()
-            ).result(
-                onSuccess = { onSignInClicked() },
-                onFailure = {
-                    _uiState.value = SignInUiState.FailedSignIn(
-                        user = user,
-                        cause = it.error.readableCause(),
-                        isSignInEnabled = isSignInEnabled(user)
-                    )
+            is SignInUiEvent.SignIn -> {
+                viewModelScope.launch {
+                    signInMiddleware(user = uiState.value.user.value, actor = this@SignInViewModel)
                 }
+                signInReducer.reduce(
+                    internalEvent = SignInUiInternalEvent.ShowLoading,
+                    currentState = uiState.value
+                )
+            }
+            is SignInUiEvent.SignInSuccessful -> onSignInClicked()
+            is SignInUiEvent.UpdateUserEmail -> signInReducer.reduce(
+                internalEvent = SignInUiInternalEvent.UpdateUserEmail(
+                    email = getNewEmail(event.email)
+                ),
+                currentState = uiState.value
             )
-
+            is SignInUiEvent.UpdateUserPassword -> signInReducer.reduce(
+                internalEvent = SignInUiInternalEvent.UpdateUserPassword(
+                    password = getNewPassword(event.password)
+                ),
+                currentState = uiState.value
+            )
+            is SignInUiEvent.SignInError -> signInReducer.reduce(
+                internalEvent = SignInUiInternalEvent.ShowError(
+                    error = event.cause
+                ),
+                currentState = uiState.value
+            )
         }
     }
 
